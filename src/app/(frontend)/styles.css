@@ -1576,7 +1576,12 @@ a:hover .text-link svg,
 }
 .contact-form {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 18px;
+}
+.contact-form .field-full,
+.contact-form .hp {
+  grid-column: 1 / -1;
 }
 .field {
   display: grid;
@@ -1653,7 +1658,8 @@ a:hover .text-link svg,
   }
 }
 @media (max-width: 560px) {
-  .field-row {
+  .field-row,
+  .contact-form {
     grid-template-columns: 1fr;
   }
 }

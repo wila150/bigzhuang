@@ -20,6 +20,7 @@ import { Projects } from './collections/Projects'
 import { Services } from './collections/Services'
 import { Users } from './collections/Users'
 import { AboutPage } from './globals/AboutPage'
+import { ContactPage } from './globals/ContactPage'
 import { HomePage } from './globals/HomePage'
 import { LineSettings } from './globals/LineSettings'
 import { ProcessPage } from './globals/ProcessPage'
@@ -45,14 +46,19 @@ export default buildConfig({
     // Side-by-side preview while editing, switchable between phone and desktop.
     livePreview: {
       collections: ['services', 'projects'],
-      globals: ['home-page', 'about-page', 'process-page'],
+      globals: ['home-page', 'about-page', 'process-page', 'contact-page'],
       openByDefault: true,
       breakpoints: [
         { name: 'mobile', label: '手機', width: 390, height: 844 },
         { name: 'desktop', label: '電腦', width: 1440, height: 900 },
       ],
       url: ({ data, collectionConfig, globalConfig }) => {
-        const pagePath: Record<string, string> = { 'home-page': '/', 'about-page': '/about', 'process-page': '/process' }
+        const pagePath: Record<string, string> = {
+          'home-page': '/',
+          'about-page': '/about',
+          'process-page': '/process',
+          'contact-page': '/contact',
+        }
         let path: string | undefined
         if (globalConfig) path = pagePath[globalConfig.slug]
         else if (collectionConfig?.slug === 'services' && data?.slug) path = `/services/${data.slug}`
@@ -72,7 +78,7 @@ export default buildConfig({
     fallbackLanguage: 'zh-TW',
   },
   collections: [Services, Projects, Categories, Faqs, Media, Inquiries, Clients, LineReplies, LineSessions, Users],
-  globals: [HomePage, AboutPage, ProcessPage, SiteSettings, LineSettings],
+  globals: [HomePage, AboutPage, ProcessPage, ContactPage, SiteSettings, LineSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

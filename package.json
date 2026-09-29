@@ -18,7 +18,8 @@
     "start:prod": "npm run migrate && npm start",
     "import:shots": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/case-shots.ts",
     "line:setup": "tsx --env-file=.env.production.local src/line/setup.ts",
-    "seed:line": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/line.ts"
+    "seed:line": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/line.ts",
+    "seed:contact": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/contact.ts"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.90.2",

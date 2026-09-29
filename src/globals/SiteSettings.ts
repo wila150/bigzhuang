@@ -39,6 +39,15 @@ export const SiteSettings: GlobalConfig = {
           ],
         },
         {
+          label: '底部聯絡橫幅',
+          description: '每一頁最下方的橘色橫幅（首頁可以在「首頁文字」另外設定）',
+          fields: [
+            { name: 'ctaTitle', label: '標題', type: 'text' },
+            { name: 'ctaText', label: '說明', type: 'text' },
+            { name: 'ctaButton', label: '按鈕文字', type: 'text' },
+          ],
+        },
+        {
           label: '付款資訊',
           description: '顯示在客戶專區，給選擇匯款的客戶參考',
           fields: [

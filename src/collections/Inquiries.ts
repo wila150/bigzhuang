@@ -26,6 +26,7 @@ export const Inquiries: CollectionConfig = {
           doc.lineId && `LINE：${doc.lineId}`,
           doc.phone && `電話：${doc.phone}`,
           doc.email && `Email：${doc.email}`,
+          ...((doc.extras ?? []) as { label?: string; value?: string }[]).map((x) => `${x.label}：${x.value}`),
           '',
           doc.message,
         ].filter((l) => l !== undefined && l !== null && l !== false)
@@ -63,6 +64,21 @@ export const Inquiries: CollectionConfig = {
     { name: 'service', label: '想做的服務', type: 'text' },
     { name: 'budget', label: '預算', type: 'text' },
     { name: 'message', label: '需求說明', type: 'textarea', required: true },
+    {
+      name: 'extras',
+      label: '其他欄位',
+      type: 'array',
+      admin: { description: '表單上「存到詢問單的：其他」欄位的回答', readOnly: true },
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            { name: 'label', label: '欄位', type: 'text', admin: { width: '40%' } },
+            { name: 'value', label: '回答', type: 'textarea', admin: { width: '60%' } },
+          ],
+        },
+      ],
+    },
     {
       name: 'status',
       label: '處理狀態',

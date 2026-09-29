@@ -3,12 +3,21 @@ import type { Metadata } from 'next'
 import { PageHero } from '@/components/Breadcrumbs'
 import { ContactForm } from '@/components/ContactForm'
 import { Icon, LineIcon } from '@/components/Icon'
-import { getServices, getSettings } from '@/lib/data'
+import { contactDefaults, CONTACT_ROLES, resolveFields } from '@/lib/contact-defaults'
+import { getContactPage, getServices, getSettings } from '@/lib/data'
 
-export const metadata: Metadata = { title: '聯絡我們', description: '用 LINE、Email、IG 或表單聯絡 BigZhaung，一個工作天內回覆。' }
+export async function generateMetadata(): Promise<Metadata> {
+  const page = await getContactPage()
+  return { title: page.heroTitle || contactDefaults.heroTitle, description: page.heroLead || contactDefaults.heroLead }
+}
 
 export default async function ContactPage() {
-  const [settings, services] = await Promise.all([getSettings(), getServices()])
+  const [settings, services, page] = await Promise.all([getSettings(), getServices(), getContactPage()])
+  const t = { ...contactDefaults, ...Object.fromEntries(Object.entries(page).filter(([, v]) => v !== null && v !== '')) }
+  const fields = resolveFields(page.fields)
+  // The 至少留一種 hint goes under the LINE ID field, or the last contact field if there is none.
+  const contactFields = fields.filter((f) => (CONTACT_ROLES as readonly string[]).includes(f.role ?? ''))
+  const contactHintFieldId = (contactFields.find((f) => f.role === 'lineId') ?? contactFields.at(-1))?.id
 
   const channels = [
     settings.lineId && {
@@ -16,31 +25,31 @@ export default async function ContactPage() {
       label: 'LINE',
       value: settings.lineId,
       href: settings.lineUrl,
-      note: '最快，通常當天回覆',
+      note: t.lineNote,
     },
     settings.email && {
       icon: <Icon name="mail" size={26} />,
       label: 'Email',
       value: settings.email,
       href: `mailto:${settings.email}`,
-      note: '適合附上參考資料',
+      note: t.emailNote,
     },
     settings.instagram && {
       icon: <Icon name="instagram" size={26} />,
       label: 'Instagram',
       value: `@${settings.instagram}`,
       href: `https://www.instagram.com/${settings.instagram}/`,
-      note: '看看最近在做什麼',
+      note: t.instagramNote,
     },
   ].filter(Boolean) as { icon: React.ReactNode; label: string; value: string; href?: string | null; note: string }[]
 
   return (
     <>
-      <PageHero crumbs={[{ label: '聯絡我們' }]} lead="告訴我你想做的網站，先聊聊不收費，一個工作天內回覆。" title="聯絡我們" />
+      <PageHero crumbs={[{ label: t.heroTitle }]} lead={t.heroLead} title={t.heroTitle} />
       <section className="section">
         <div className="container contact-grid">
           <div className="contact-channels">
-            <h2>聯絡管道</h2>
+            <h2>{t.channelsTitle}</h2>
             {channels.length ? (
               <ul>
                 {channels.map((c) => (
@@ -70,8 +79,13 @@ export default async function ContactPage() {
             ) : null}
           </div>
           <div className="contact-form-wrap">
-            <h2>線上詢問</h2>
-            <ContactForm services={services.map((s) => s.title)} />
+            <h2>{t.formTitle}</h2>
+            <ContactForm
+              contactHintFieldId={t.requireContact ? contactHintFieldId : undefined}
+              fields={fields}
+              services={services.map((s) => s.title)}
+              texts={{ contactHint: t.contactHint, submitLabel: t.submitLabel, successTitle: t.successTitle, successText: t.successText }}
+            />
           </div>
         </div>
       </section>

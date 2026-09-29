@@ -108,6 +108,7 @@ export interface Config {
     'home-page': HomePage;
     'about-page': AboutPage;
     'process-page': ProcessPage;
+    'contact-page': ContactPage;
     'site-settings': SiteSetting;
     'line-settings': LineSetting;
   };
@@ -115,6 +116,7 @@ export interface Config {
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
     'process-page': ProcessPageSelect<false> | ProcessPageSelect<true>;
+    'contact-page': ContactPageSelect<false> | ContactPageSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'line-settings': LineSettingsSelect<false> | LineSettingsSelect<true>;
   };
@@ -374,6 +376,16 @@ export interface Inquiry {
   service?: string | null;
   budget?: string | null;
   message: string;
+  /**
+   * 表單上「存到詢問單的：其他」欄位的回答
+   */
+  extras?:
+    | {
+        label?: string | null;
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   status?: ('new' | 'contacted' | 'quoted' | 'won' | 'lost') | null;
   note?: string | null;
   updatedAt: string;
@@ -788,6 +800,13 @@ export interface InquiriesSelect<T extends boolean = true> {
   service?: T;
   budget?: T;
   message?: T;
+  extras?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        id?: T;
+      };
   status?: T;
   note?: T;
   updatedAt?: T;
@@ -975,6 +994,60 @@ export interface ProcessPage {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-page".
+ */
+export interface ContactPage {
+  id: number;
+  heroTitle?: string | null;
+  heroLead?: string | null;
+  channelsTitle?: string | null;
+  lineNote?: string | null;
+  emailNote?: string | null;
+  instagramNote?: string | null;
+  formTitle?: string | null;
+  /**
+   * 可以新增、刪除、拖曳排序。留空會使用預設的 7 個欄位。
+   */
+  fields?:
+    | {
+        label: string;
+        type: 'text' | 'email' | 'tel' | 'textarea' | 'select';
+        /**
+         * 兩個相鄰的半行欄位會並排
+         */
+        width?: ('full' | 'half') | null;
+        required?: boolean | null;
+        /**
+         * 同一種最多用一次
+         */
+        role?: ('other' | 'name' | 'email' | 'phone' | 'lineId' | 'service' | 'budget' | 'message') | null;
+        placeholder?: string | null;
+        hint?: string | null;
+        useServices?: boolean | null;
+        /**
+         * 一行一個選項
+         */
+        options?: string | null;
+        /**
+         * 例如：還不確定
+         */
+        emptyOption?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  requireContact?: boolean | null;
+  contactHint?: string | null;
+  requireContactMessage?: string | null;
+  submitLabel?: string | null;
+  successTitle?: string | null;
+  successText?: string | null;
+  errorText?: string | null;
+  _status?: ('draft' | 'published') | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings".
  */
 export interface SiteSetting {
@@ -998,6 +1071,9 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
+  ctaTitle?: string | null;
+  ctaText?: string | null;
+  ctaButton?: string | null;
   bankName?: string | null;
   bankCode?: string | null;
   bankAccount?: string | null;
@@ -1110,6 +1186,45 @@ export interface ProcessPageSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-page_select".
+ */
+export interface ContactPageSelect<T extends boolean = true> {
+  heroTitle?: T;
+  heroLead?: T;
+  channelsTitle?: T;
+  lineNote?: T;
+  emailNote?: T;
+  instagramNote?: T;
+  formTitle?: T;
+  fields?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        width?: T;
+        required?: T;
+        role?: T;
+        placeholder?: T;
+        hint?: T;
+        useServices?: T;
+        options?: T;
+        emptyOption?: T;
+        id?: T;
+      };
+  requireContact?: T;
+  contactHint?: T;
+  requireContactMessage?: T;
+  submitLabel?: T;
+  successTitle?: T;
+  successText?: T;
+  errorText?: T;
+  _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "site-settings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
@@ -1126,6 +1241,9 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         href?: T;
         id?: T;
       };
+  ctaTitle?: T;
+  ctaText?: T;
+  ctaButton?: T;
   bankName?: T;
   bankCode?: T;
   bankAccount?: T;

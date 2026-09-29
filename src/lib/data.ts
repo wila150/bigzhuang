@@ -32,6 +32,10 @@ export const getProcess = cache(async () =>
   (await getPayloadClient()).findGlobal({ slug: 'process-page', draft: await isPreview() }),
 )
 
+export const getContactPage = cache(async () =>
+  (await getPayloadClient()).findGlobal({ slug: 'contact-page', draft: await isPreview() }),
+)
+
 export const getServices = cache(async () => {
   const payload = await getPayloadClient()
   const res = await payload.find({
