@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-export function LogoutButton() {
+export function LogoutButton({ label }: { label: string }) {
   const router = useRouter()
   const [busy, setBusy] = useState(false)
   return (
@@ -17,7 +17,7 @@ export function LogoutButton() {
       }}
       type="button"
     >
-      登出
+      {label}
     </button>
   )
 }

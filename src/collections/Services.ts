@@ -5,8 +5,8 @@ import { draftsWithAutosave } from '../fields/drafts'
 import { orderField, publishedField, slugField } from '../fields/slug'
 
 const titleDesc = [
-  { name: 'title', label: '標題', type: 'text', required: true },
-  { name: 'description', label: '說明', type: 'textarea' },
+  { name: 'title', localized: true, label: '標題', type: 'text', required: true },
+  { name: 'description', localized: true, label: '說明', type: 'textarea' },
 ] as const
 
 export const Services: CollectionConfig = {
@@ -17,14 +17,14 @@ export const Services: CollectionConfig = {
   admin: { useAsTitle: 'title', group: '內容', defaultColumns: ['title', 'order', 'published'] },
   defaultSort: 'order',
   fields: [
-    { name: 'title', label: '服務名稱', type: 'text', required: true },
-    { name: 'summary', label: '一句話說明', type: 'textarea', required: true, admin: { description: '首頁服務卡片與列表頁使用' } },
+    { name: 'title', localized: true, label: '服務名稱', type: 'text', required: true },
+    { name: 'summary', localized: true, label: '一句話說明', type: 'textarea', required: true, admin: { description: '首頁服務卡片與列表頁使用' } },
     { name: 'cover', label: '封面圖', type: 'upload', relationTo: 'media' },
     {
       name: 'includes',
       label: '包含項目',
       type: 'array',
-      fields: [{ name: 'item', label: '項目', type: 'text', required: true }],
+      fields: [{ name: 'item', localized: true, label: '項目', type: 'text', required: true }],
     },
     {
       type: 'tabs',
@@ -32,9 +32,9 @@ export const Services: CollectionConfig = {
         {
           label: '服務內頁',
           fields: [
-            { name: 'tagline', label: '主標語', type: 'text' },
-            { name: 'problem', label: '客戶現在的困擾', type: 'textarea' },
-            { name: 'solution', label: '一句解法', type: 'textarea' },
+            { name: 'tagline', localized: true, label: '主標語', type: 'text' },
+            { name: 'problem', localized: true, label: '客戶現在的困擾', type: 'textarea' },
+            { name: 'solution', localized: true, label: '一句解法', type: 'textarea' },
             {
               name: 'features',
               label: '網站特色（4 項）',
@@ -53,7 +53,7 @@ export const Services: CollectionConfig = {
                   name: 'tags',
                   label: '功能標籤',
                   type: 'array',
-                  fields: [{ name: 'tag', label: '標籤', type: 'text', required: true }],
+                  fields: [{ name: 'tag', localized: true, label: '標籤', type: 'text', required: true }],
                 },
               ],
             },

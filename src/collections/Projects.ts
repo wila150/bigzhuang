@@ -16,13 +16,13 @@ export const Projects: CollectionConfig = {
   },
   defaultSort: 'order',
   fields: [
-    { name: 'title', label: '案例名稱', type: 'text', required: true },
+    { name: 'title', localized: true, label: '案例名稱', type: 'text', required: true },
     { name: 'category', label: '分類', type: 'relationship', relationTo: 'categories', required: true },
     {
       type: 'row',
       fields: [
-        { name: 'siteType', label: '網站類型', type: 'text', admin: { width: '50%' } },
-        { name: 'industry', label: '產業', type: 'text', admin: { width: '50%' } },
+        { name: 'siteType', localized: true, label: '網站類型', type: 'text', admin: { width: '50%' } },
+        { name: 'industry', localized: true, label: '產業', type: 'text', admin: { width: '50%' } },
       ],
     },
     {
@@ -32,7 +32,7 @@ export const Projects: CollectionConfig = {
         { name: 'year', label: '建置年份', type: 'number', admin: { width: '50%' } },
       ],
     },
-    { name: 'summary', label: '簡介', type: 'textarea' },
+    { name: 'summary', localized: true, label: '簡介', type: 'textarea' },
     {
       name: 'tech',
       label: '使用技術',
@@ -43,7 +43,7 @@ export const Projects: CollectionConfig = {
       name: 'features',
       label: '功能標籤',
       type: 'array',
-      fields: [{ name: 'name', label: '功能', type: 'text', required: true }],
+      fields: [{ name: 'name', localized: true, label: '功能', type: 'text', required: true }],
     },
     {
       name: 'cover',

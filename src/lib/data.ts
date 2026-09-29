@@ -3,6 +3,7 @@ import { draftMode } from 'next/headers'
 import { getPayload, type Where } from 'payload'
 import { cache } from 'react'
 
+import type { Lang } from '@/i18n/config'
 import type { Category, Media, Project, Service } from '@/payload-types'
 
 export const getPayloadClient = cache(async () => getPayload({ config }))
@@ -18,78 +19,64 @@ async function visible(extra: Where[] = []): Promise<{ draft: boolean; where: Wh
   return { draft, where: { and: rules } }
 }
 
-export const getSettings = cache(async () =>
-  (await getPayloadClient()).findGlobal({ slug: 'site-settings' }),
-)
-
-export const getHome = cache(async () =>
-  (await getPayloadClient()).findGlobal({ slug: 'home-page', draft: await isPreview() }),
-)
-export const getAbout = cache(async () =>
-  (await getPayloadClient()).findGlobal({ slug: 'about-page', draft: await isPreview() }),
-)
-export const getProcess = cache(async () =>
-  (await getPayloadClient()).findGlobal({ slug: 'process-page', draft: await isPreview() }),
-)
-
-export const getContactPage = cache(async () =>
-  (await getPayloadClient()).findGlobal({ slug: 'contact-page', draft: await isPreview() }),
-)
-
-export const getServices = cache(async () => {
+/**
+ * Finds docs as visitors or the preview should see them. In preview, docs that have never been saved as a
+ * draft (created before drafts were enabled) are missing from draft queries, so the published copy fills in.
+ */
+async function findVisible<T extends 'services' | 'projects'>(
+  collection: T,
+  lang: Lang,
+  opts: { extra?: Where[]; limit: number; depth: number },
+) {
   const payload = await getPayloadClient()
-  const res = await payload.find({
-    collection: 'services',
-    ...(await visible()),
-    sort: 'order',
-    limit: 50,
-    depth: 1,
-  })
-  return res.docs
+  const { draft, where } = await visible(opts.extra)
+  const base = { collection, where, sort: 'order', limit: opts.limit, depth: opts.depth, locale: lang } as const
+  const res = await payload.find({ ...base, draft })
+  if (!draft) return res.docs
+  const published = await payload.find({ ...base, draft: false })
+  const merged = [...res.docs, ...published.docs.filter((p) => !res.docs.some((d) => d.id === p.id))]
+  return merged.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+}
+
+const global = <S extends 'home-page' | 'about-page' | 'process-page' | 'contact-page'>(slug: S) =>
+  cache(async (lang: Lang) => (await getPayloadClient()).findGlobal({ slug, draft: await isPreview(), locale: lang }))
+
+export const getSettings = cache(async (lang: Lang) =>
+  (await getPayloadClient()).findGlobal({ slug: 'site-settings', locale: lang }),
+)
+export const getHome = global('home-page')
+export const getAbout = global('about-page')
+export const getProcess = global('process-page')
+export const getContactPage = global('contact-page')
+
+export const getServices = cache(async (lang: Lang) => findVisible('services', lang, { limit: 50, depth: 1 }))
+
+export const getService = cache(async (lang: Lang, slug: string) => {
+  const docs = await findVisible('services', lang, { extra: [{ slug: { equals: slug } }], limit: 1, depth: 1 })
+  return docs[0] ?? null
 })
 
-export const getService = cache(async (slug: string) => {
-  const payload = await getPayloadClient()
-  const res = await payload.find({
-    collection: 'services',
-    ...(await visible([{ slug: { equals: slug } }])),
-    limit: 1,
-    depth: 1,
-  })
-  return res.docs[0] ?? null
-})
+export const getProjects = cache(async (lang: Lang) => findVisible('projects', lang, { limit: 200, depth: 2 }))
 
-export const getProjects = cache(async () => {
-  const payload = await getPayloadClient()
-  const res = await payload.find({
-    collection: 'projects',
-    ...(await visible()),
-    sort: 'order',
-    limit: 200,
-    depth: 2,
-  })
-  return res.docs
-})
-
-export const getProject = cache(async (slug: string) => {
-  const projects = await getProjects()
+export const getProject = cache(async (lang: Lang, slug: string) => {
+  const projects = await getProjects(lang)
   return projects.find((p) => p.slug === slug) ?? null
 })
 
 /** Categories that have at least one published project — empty ones stay hidden. */
-export const getActiveCategories = cache(async () => {
+export const getActiveCategories = cache(async (lang: Lang) => {
   const payload = await getPayloadClient()
   const [cats, projects] = await Promise.all([
-    payload.find({ collection: 'categories', sort: 'order', limit: 100 }),
-    getProjects(),
+    payload.find({ collection: 'categories', sort: 'order', limit: 100, locale: lang }),
+    getProjects(lang),
   ])
   const used = new Set(projects.map((p) => categoryOf(p)?.id))
   return cats.docs.filter((c) => used.has(c.id))
 })
 
-export const getFaqs = cache(async () => {
+export const getFaqs = cache(async (lang: Lang) => {
   const payload = await getPayloadClient()
-  const res = await payload.find({ collection: 'faqs', sort: 'order', limit: 100 })
+  const res = await payload.find({ collection: 'faqs', sort: 'order', limit: 100, locale: lang })
   return res.docs
 })
 

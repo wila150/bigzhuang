@@ -9,7 +9,7 @@ export const Media: CollectionConfig = {
   admin: { group: '內容' },
   fields: [
     {
-      name: 'alt',
+      name: 'alt', localized: true,
       label: '替代文字',
       type: 'text',
       required: true,

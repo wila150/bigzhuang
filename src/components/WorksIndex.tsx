@@ -1,5 +1,7 @@
 import Link from 'next/link'
 
+import { localePath, type Lang } from '@/i18n/config'
+import { getDictionary } from '@/i18n/dictionaries'
 import type { Category, Project } from '@/payload-types'
 
 import { PageHero } from './Breadcrumbs'
@@ -11,29 +13,30 @@ export function WorksIndex({
   categories,
   projects,
   current,
+  lang,
 }: {
   categories: Category[]
   projects: Project[]
   current?: Category
+  lang: Lang
 }) {
-  const crumbs = current
-    ? [{ href: '/works', label: '作品案例' }, { label: current.title }]
-    : [{ label: '作品案例' }]
+  const t = getDictionary(lang).works
+  const crumbs = current ? [{ href: '/works', label: t.title }, { label: current.title }] : [{ label: t.title }]
 
   return (
     <>
-      <PageHero crumbs={crumbs} lead="每個案例都是從零開始規劃，點進去看網站類型、使用技術與實際畫面。" title={current ? `${current.title}案例` : '作品案例'} />
+      <PageHero crumbs={crumbs} lang={lang} lead={t.lead} title={current ? t.categoryTitle(current.title) : t.title} />
       <section className="section works-page">
         <div className="container">
-          <nav aria-label="作品分類" className="filter-bar">
-            <Link aria-current={!current ? 'page' : undefined} className="filter-btn" href="/works">
-              全部
+          <nav aria-label={t.filterAria} className="filter-bar">
+            <Link aria-current={!current ? 'page' : undefined} className="filter-btn" href={localePath(lang, '/works')}>
+              {t.all}
             </Link>
             {categories.map((c) => (
               <Link
                 aria-current={current?.id === c.id ? 'page' : undefined}
                 className="filter-btn"
-                href={`/works/category/${c.slug}`}
+                href={localePath(lang, `/works/category/${c.slug}`)}
                 key={c.id}
               >
                 {c.title}
@@ -41,13 +44,13 @@ export function WorksIndex({
             ))}
           </nav>
         </div>
-        <WorksMarquee projects={projects} />
+        <WorksMarquee lang={lang} projects={projects} />
         <div className="container">
-          <h2 className="sr-only">案例列表</h2>
-          <ProjectGrid projects={projects} />
+          <h2 className="sr-only">{t.listHeading}</h2>
+          <ProjectGrid lang={lang} projects={projects} />
         </div>
       </section>
-      <CtaBanner />
+      <CtaBanner lang={lang} />
     </>
   )
 }

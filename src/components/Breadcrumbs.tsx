@@ -1,9 +1,19 @@
 import Link from 'next/link'
 
+import { localePath, type Lang } from '@/i18n/config'
+import { getDictionary } from '@/i18n/dictionaries'
+
 export type Crumb = { href?: string; label: string }
 
-export function Breadcrumbs({ items }: { items: Crumb[] }) {
-  const all: Crumb[] = [{ href: '/', label: '首頁' }, ...items]
+const siteUrl = process.env.NEXT_PUBLIC_SERVER_URL || ''
+
+/** `items` hrefs are unprefixed site paths; the language prefix is added here. */
+export function Breadcrumbs({ items, lang }: { items: Crumb[]; lang: Lang }) {
+  const t = getDictionary(lang)
+  const all: Crumb[] = [{ href: '/', label: t.nav.home }, ...items].map((c) => ({
+    ...c,
+    href: c.href ? localePath(lang, c.href) : undefined,
+  }))
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -11,11 +21,11 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
       '@type': 'ListItem',
       position: i + 1,
       name: c.label,
-      ...(c.href ? { item: c.href } : {}),
+      ...(c.href ? { item: `${siteUrl}${c.href}` } : {}),
     })),
   }
   return (
-    <nav aria-label="麵包屑" className="breadcrumbs">
+    <nav aria-label={t.common.breadcrumb} className="breadcrumbs">
       <ol>
         {all.map((c, i) => (
           <li key={`${c.label}-${i}`}>
@@ -28,11 +38,11 @@ export function Breadcrumbs({ items }: { items: Crumb[] }) {
   )
 }
 
-export function PageHero({ title, lead, crumbs }: { title: string; lead?: string | null; crumbs: Crumb[] }) {
+export function PageHero({ title, lead, crumbs, lang }: { title: string; lead?: string | null; crumbs: Crumb[]; lang: Lang }) {
   return (
     <section className="page-hero">
       <div className="container">
-        <Breadcrumbs items={crumbs} />
+        <Breadcrumbs items={crumbs} lang={lang} />
         <h1>{title}</h1>
         {lead ? <p className="page-lead">{lead}</p> : null}
       </div>

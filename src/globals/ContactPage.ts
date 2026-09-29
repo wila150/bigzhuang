@@ -16,15 +16,15 @@ export const ContactPage: GlobalConfig = {
         {
           label: '頁面文字',
           fields: [
-            { name: 'heroTitle', label: '頁面標題', type: 'text' },
-            { name: 'heroLead', label: '標題下方說明', type: 'textarea' },
-            { name: 'channelsTitle', label: '「聯絡管道」小標題', type: 'text' },
+            { name: 'heroTitle', localized: true, label: '頁面標題', type: 'text' },
+            { name: 'heroLead', localized: true, label: '標題下方說明', type: 'textarea' },
+            { name: 'channelsTitle', localized: true, label: '「聯絡管道」小標題', type: 'text' },
             {
               type: 'row',
               fields: [
-                { name: 'lineNote', label: 'LINE 下方小字', type: 'text', admin: { width: '33%' } },
-                { name: 'emailNote', label: 'Email 下方小字', type: 'text', admin: { width: '33%' } },
-                { name: 'instagramNote', label: 'IG 下方小字', type: 'text', admin: { width: '33%' } },
+                { name: 'lineNote', localized: true, label: 'LINE 下方小字', type: 'text', admin: { width: '33%' } },
+                { name: 'emailNote', localized: true, label: 'Email 下方小字', type: 'text', admin: { width: '33%' } },
+                { name: 'instagramNote', localized: true, label: 'IG 下方小字', type: 'text', admin: { width: '33%' } },
               ],
             },
             {
@@ -37,7 +37,7 @@ export const ContactPage: GlobalConfig = {
         {
           label: '表單欄位',
           fields: [
-            { name: 'formTitle', label: '「線上詢問」小標題', type: 'text' },
+            { name: 'formTitle', localized: true, label: '「線上詢問」小標題', type: 'text' },
             {
               name: 'fields',
               label: '欄位',
@@ -52,7 +52,7 @@ export const ContactPage: GlobalConfig = {
                 {
                   type: 'row',
                   fields: [
-                    { name: 'label', label: '欄位標題', type: 'text', required: true, admin: { width: '50%' } },
+                    { name: 'label', localized: true, label: '欄位標題', type: 'text', required: true, admin: { width: '50%' } },
                     {
                       name: 'type',
                       label: '類型',
@@ -102,10 +102,10 @@ export const ContactPage: GlobalConfig = {
                       ],
                       admin: { width: '40%', description: '同一種最多用一次' },
                     },
-                    { name: 'placeholder', label: '輸入框內的提示', type: 'text', admin: { width: '40%' } },
+                    { name: 'placeholder', localized: true, label: '輸入框內的提示', type: 'text', admin: { width: '40%' } },
                   ],
                 },
-                { name: 'hint', label: '欄位下方說明（選填）', type: 'text' },
+                { name: 'hint', localized: true, label: '欄位下方說明（選填）', type: 'text' },
                 {
                   name: 'useServices',
                   label: '選項自動使用「服務項目」的名稱',
@@ -113,7 +113,7 @@ export const ContactPage: GlobalConfig = {
                   admin: { condition: (_, row) => row?.type === 'select' },
                 },
                 {
-                  name: 'options',
+                  name: 'options', localized: true,
                   label: '選項',
                   type: 'textarea',
                   admin: {
@@ -123,7 +123,7 @@ export const ContactPage: GlobalConfig = {
                   },
                 },
                 {
-                  name: 'emptyOption',
+                  name: 'emptyOption', localized: true,
                   label: '未選擇時顯示',
                   type: 'text',
                   admin: { condition: (_, row) => row?.type === 'select', description: '例如：還不確定' },
@@ -136,12 +136,12 @@ export const ContactPage: GlobalConfig = {
           label: '規則與訊息',
           fields: [
             { name: 'requireContact', label: '要求至少留一種聯絡方式（Email、電話、LINE ID 其一）', type: 'checkbox', defaultValue: true },
-            { name: 'contactHint', label: '聯絡方式提示（顯示在 LINE ID 欄位下方）', type: 'text' },
-            { name: 'requireContactMessage', label: '沒留聯絡方式時的錯誤訊息', type: 'text' },
-            { name: 'submitLabel', label: '送出按鈕文字', type: 'text' },
-            { name: 'successTitle', label: '送出成功：標題', type: 'text' },
-            { name: 'successText', label: '送出成功：說明', type: 'textarea' },
-            { name: 'errorText', label: '送出失敗訊息', type: 'textarea' },
+            { name: 'contactHint', localized: true, label: '聯絡方式提示（顯示在 LINE ID 欄位下方）', type: 'text' },
+            { name: 'requireContactMessage', localized: true, label: '沒留聯絡方式時的錯誤訊息', type: 'text' },
+            { name: 'submitLabel', localized: true, label: '送出按鈕文字', type: 'text' },
+            { name: 'successTitle', localized: true, label: '送出成功：標題', type: 'text' },
+            { name: 'successText', localized: true, label: '送出成功：說明', type: 'textarea' },
+            { name: 'errorText', localized: true, label: '送出失敗訊息', type: 'textarea' },
           ],
         },
       ],

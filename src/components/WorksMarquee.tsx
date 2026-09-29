@@ -2,15 +2,17 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import type { Project } from '@/payload-types'
+import { localePath, type Lang } from '@/i18n/config'
+import { getDictionary } from '@/i18n/dictionaries'
 import { media, mediaUrl } from '@/lib/data'
 
 type Tile = { key: string; href: string; title: string; kind: 'big' | 'small' | 'tall'; src: string | null; alt: string; tone: number }
 
 // Each project contributes its cover (big), gallery shots (small) and phone shot (tall).
-function tilesFor(projects: Project[]): Tile[] {
+function tilesFor(projects: Project[], lang: Lang): Tile[] {
   return projects.flatMap((p, index) => {
     const tone = index % 3
-    const href = `/works/${p.slug}`
+    const href = localePath(lang, `/works/${p.slug}`)
     const tiles: Tile[] = [
       { key: `${p.id}-cover`, href, title: p.title, kind: 'big', src: mediaUrl(p.cover, 'large'), alt: media(p.cover)?.alt ?? p.title, tone },
     ]
@@ -40,12 +42,12 @@ function TileView({ tile, hidden }: { tile: Tile; hidden?: boolean }) {
   )
 }
 
-export function WorksMarquee({ projects }: { projects: Project[] }) {
-  if (!projects.length) return <p className="empty-note">案例整理中，敬請期待。</p>
+export function WorksMarquee({ projects, lang }: { projects: Project[]; lang: Lang }) {
+  if (!projects.length) return <p className="empty-note">{getDictionary(lang).common.worksEmpty}</p>
 
-  let tiles = tilesFor(projects)
+  let tiles = tilesFor(projects, lang)
   // A short track would leave a gap on wide screens, so repeat it until it is long enough.
-  while (tiles.length < 10) tiles = [...tiles, ...tilesFor(projects).map((t) => ({ ...t, key: `${t.key}-${tiles.length}` }))]
+  while (tiles.length < 10) tiles = [...tiles, ...tilesFor(projects, lang).map((t) => ({ ...t, key: `${t.key}-${tiles.length}` }))]
   const seconds = Math.max(30, tiles.length * 5)
 
   return (

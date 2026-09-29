@@ -10,7 +10,7 @@ export const Categories: CollectionConfig = {
   admin: { useAsTitle: 'title', group: '內容', defaultColumns: ['title', 'slug', 'order'] },
   defaultSort: 'order',
   fields: [
-    { name: 'title', label: '分類名稱', type: 'text', required: true },
+    { name: 'title', localized: true, label: '分類名稱', type: 'text', required: true },
     slugField('例如 brand-website'),
     orderField,
   ],

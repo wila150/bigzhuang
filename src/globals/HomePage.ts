@@ -10,8 +10,8 @@ export const HomePage: GlobalConfig = {
   versions: draftsWithAutosave,
   admin: { group: '頁面文字' },
   fields: [
-    { name: 'heroTitle', label: '主標語', type: 'text', required: true },
-    { name: 'heroText', label: '主標語下方說明', type: 'textarea' },
+    { name: 'heroTitle', localized: true, label: '主標語', type: 'text', required: true },
+    { name: 'heroText', localized: true, label: '主標語下方說明', type: 'textarea' },
     { name: 'heroImage', label: '主視覺圖片', type: 'upload', relationTo: 'media' },
     {
       name: 'sellingPoints',
@@ -19,11 +19,11 @@ export const HomePage: GlobalConfig = {
       type: 'array',
       maxRows: 4,
       fields: [
-        { name: 'title', label: '賣點', type: 'text', required: true },
-        { name: 'description', label: '一句說明', type: 'text' },
+        { name: 'title', localized: true, label: '賣點', type: 'text', required: true },
+        { name: 'description', localized: true, label: '一句說明', type: 'text' },
       ],
     },
-    { name: 'ctaTitle', label: '聯絡橫幅標題', type: 'text' },
-    { name: 'ctaText', label: '聯絡橫幅說明', type: 'text' },
+    { name: 'ctaTitle', localized: true, label: '聯絡橫幅標題', type: 'text' },
+    { name: 'ctaText', localized: true, label: '聯絡橫幅說明', type: 'text' },
   ],
 }

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { Icon, LineIcon } from './Icon'
 
-export function FloatingButtons({ lineUrl }: { lineUrl?: string | null }) {
+export function FloatingButtons({ lineUrl, t }: { lineUrl?: string | null; t: { line: string; lineAria: string; top: string } }) {
   const [showTop, setShowTop] = useState(false)
 
   useEffect(() => {
@@ -17,13 +17,13 @@ export function FloatingButtons({ lineUrl }: { lineUrl?: string | null }) {
   return (
     <div className="floating">
       {lineUrl ? (
-        <a aria-label="用 LINE 詢問" className="float-btn float-line" href={lineUrl} rel="noopener noreferrer" target="_blank">
+        <a aria-label={t.lineAria} className="float-btn float-line" href={lineUrl} rel="noopener noreferrer" target="_blank">
           <LineIcon size={28} />
-          <span className="float-label">LINE 詢問</span>
+          <span className="float-label">{t.line}</span>
         </a>
       ) : null}
       <button
-        aria-label="回到頂端"
+        aria-label={t.top}
         className={`float-btn float-top${showTop ? ' is-visible' : ''}`}
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         tabIndex={showTop ? 0 : -1}

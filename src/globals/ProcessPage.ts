@@ -10,15 +10,15 @@ export const ProcessPage: GlobalConfig = {
   versions: draftsWithAutosave,
   admin: { group: '頁面文字' },
   fields: [
-    { name: 'intro', label: '頁面說明', type: 'textarea' },
+    { name: 'intro', localized: true, label: '頁面說明', type: 'textarea' },
     {
       name: 'steps',
       label: '步驟',
       type: 'array',
       fields: [
-        { name: 'title', label: '步驟名稱', type: 'text', required: true },
-        { name: 'description', label: '說明', type: 'textarea' },
-        { name: 'duration', label: '大約時間', type: 'text' },
+        { name: 'title', localized: true, label: '步驟名稱', type: 'text', required: true },
+        { name: 'description', localized: true, label: '說明', type: 'textarea' },
+        { name: 'duration', localized: true, label: '大約時間', type: 'text' },
       ],
     },
   ],

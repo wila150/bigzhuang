@@ -103,7 +103,7 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('zh' | 'en') | ('zh' | 'en')[];
   globals: {
     'home-page': HomePage;
     'about-page': AboutPage;
@@ -120,7 +120,7 @@ export interface Config {
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
     'line-settings': LineSettingsSelect<false> | LineSettingsSelect<true>;
   };
-  locale: null;
+  locale: 'zh' | 'en';
   widgets: {
     collections: CollectionsWidget;
   };

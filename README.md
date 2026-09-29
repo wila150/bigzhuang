@@ -53,3 +53,10 @@ In development, Payload syncs the database schema automatically. After changing 
 - `/line/webhook` sends the welcome message when someone adds the account, and keyword auto-replies (edit them in 後台 → LINE 自動回覆). Messages that match no keyword get no reply, so you can answer them yourself.
 - New inquiries and card payments are pushed to your LINE. To bind your account, send the command shown in 後台 → LINE 設定 from your own LINE.
 - Rich menu: the image is `public/line/richmenu.jpg` (source `src/line/richmenu/menu.html`). `npm run line:setup` publishes it and sets the webhook URL. Rerun it after changing the domain.
+
+## Chinese and English
+
+- Chinese is at the normal URLs, English under `/en` (`src/proxy.ts` rewrites unprefixed paths to the `zh` locale). The 中文｜EN switch keeps you on the same page.
+- In the admin, use the language switch at the top of any document to edit its English version. Blank English fields show the Chinese text.
+- Fixed UI text (buttons, headings, form messages) is in `src/i18n/dictionaries.ts`.
+- `npm run seed:english` fills English from the translation table in `src/seed/i18n-english-strings.ts` (used once when the site became bilingual).

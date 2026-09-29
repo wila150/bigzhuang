@@ -5,12 +5,15 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+import { localePath, stripLocale, type Lang } from '@/i18n/config'
+import type { Dictionary } from '@/i18n/dictionaries'
+
 import { Icon } from './Icon'
 
 type NavLink = { href: string; label: string }
 type NavItem = NavLink & { children?: NavLink[] }
 
-export function Header({ items }: { items: NavItem[] }) {
+export function Header({ items, lang, t }: { items: NavItem[]; lang: Lang; t: Dictionary['nav'] }) {
   const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -28,24 +31,32 @@ export function Header({ items }: { items: NavItem[] }) {
     document.body.style.overflow = open ? 'hidden' : ''
   }, [open])
 
-  const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`)
+  // Same page in the other language.
+  const basePath = stripLocale(pathname)
+  const current = localePath(lang, basePath)
+  const isActive = (href: string) => current === href || current.startsWith(`${href}/`)
+
+  const switcher = (
+    <div aria-label={t.language} className="lang-switch" role="group">
+      <Link aria-current={lang === 'zh' ? 'true' : undefined} href={localePath('zh', basePath)} hrefLang="zh-Hant-TW" lang="zh-Hant-TW">
+        中文
+      </Link>
+      <span aria-hidden="true">｜</span>
+      <Link aria-current={lang === 'en' ? 'true' : undefined} href={localePath('en', basePath)} hrefLang="en" lang="en">
+        EN
+      </Link>
+    </div>
+  )
 
   return (
     <header className={`site-header${scrolled ? ' is-scrolled' : ''}`}>
       <div className="container header-inner">
-        <Link aria-label="BigZhaung 回首頁" className="brand" href="/">
-          <Image
-            alt="BigZhaung"
-            className="brand-full"
-            height={885}
-            priority
-            src="/logo-navigation.png"
-            width={2247}
-          />
+        <Link aria-label={t.backHome} className="brand" href={localePath(lang, '/')}>
+          <Image alt="BigZhaung" className="brand-full" height={885} priority src="/logo-navigation.png" width={2247} />
           <Image alt="" aria-hidden className="brand-mark" height={1278} src="/logo-mark.png" width={1287} />
         </Link>
 
-        <nav aria-label="主選單" className={`nav${open ? ' is-open' : ''}`} id="site-nav">
+        <nav aria-label={t.mainMenu} className={`nav${open ? ' is-open' : ''}`} id="site-nav">
           <ul className="nav-list">
             {items.map((item) => (
               <li className={item.children?.length ? 'has-sub' : undefined} key={item.href}>
@@ -57,7 +68,7 @@ export function Header({ items }: { items: NavItem[] }) {
                   <ul className="nav-sub">
                     {item.children.map((child) => (
                       <li key={child.href}>
-                        <Link aria-current={pathname === child.href ? 'page' : undefined} href={child.href}>
+                        <Link aria-current={current === child.href ? 'page' : undefined} href={child.href}>
                           {child.label}
                         </Link>
                       </li>
@@ -67,15 +78,16 @@ export function Header({ items }: { items: NavItem[] }) {
               </li>
             ))}
           </ul>
-          <Link className="btn btn-accent nav-cta" href="/contact">
-            聯絡我們
+          {switcher}
+          <Link className="btn btn-accent nav-cta" href={localePath(lang, '/contact')}>
+            {t.contact}
           </Link>
         </nav>
 
         <button
           aria-controls="site-nav"
           aria-expanded={open}
-          aria-label={open ? '關閉選單' : '開啟選單'}
+          aria-label={open ? t.menuClose : t.menuOpen}
           className="menu-toggle"
           onClick={() => setOpen((v) => !v)}
           type="button"

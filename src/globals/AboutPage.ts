@@ -11,14 +11,14 @@ export const AboutPage: GlobalConfig = {
   admin: { group: '頁面文字' },
   fields: [
     { name: 'photo', label: '照片或頭像', type: 'upload', relationTo: 'media' },
-    { name: 'intro', label: '自我介紹', type: 'textarea' },
-    { name: 'why', label: '為什麼做網站', type: 'textarea' },
+    { name: 'intro', localized: true, label: '自我介紹', type: 'textarea' },
+    { name: 'why', localized: true, label: '為什麼做網站', type: 'textarea' },
     {
       name: 'skills',
       label: '會的技術',
       type: 'array',
       fields: [{ name: 'name', label: '技術', type: 'text', required: true }],
     },
-    { name: 'story', label: '品牌故事', type: 'textarea' },
+    { name: 'story', localized: true, label: '品牌故事', type: 'textarea' },
   ],
 }

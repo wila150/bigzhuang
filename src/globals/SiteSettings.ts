@@ -20,19 +20,19 @@ export const SiteSettings: GlobalConfig = {
             { name: 'lineUrl', label: 'LINE 加好友連結', type: 'text', admin: { description: '例如 https://line.me/ti/p/~yourid' } },
             { name: 'email', label: 'Email', type: 'email' },
             { name: 'instagram', label: 'IG 帳號', type: 'text', admin: { description: '不含 @' } },
-            { name: 'serviceArea', label: '服務區域', type: 'text', defaultValue: '全台線上服務' },
+            { name: 'serviceArea', localized: true, label: '服務區域', type: 'text', defaultValue: '全台線上服務' },
           ],
         },
         {
           label: '頁尾',
           fields: [
-            { name: 'footerBlurb', label: '品牌一句說明', type: 'textarea' },
+            { name: 'footerBlurb', localized: true, label: '品牌一句說明', type: 'textarea' },
             {
               name: 'footerKeywords',
               label: '熱門關鍵字',
               type: 'array',
               fields: [
-                { name: 'label', label: '關鍵字', type: 'text', required: true },
+                { name: 'label', localized: true, label: '關鍵字', type: 'text', required: true },
                 { name: 'href', label: '連結', type: 'text', required: true },
               ],
             },
@@ -42,9 +42,9 @@ export const SiteSettings: GlobalConfig = {
           label: '底部聯絡橫幅',
           description: '每一頁最下方的橘色橫幅（首頁可以在「首頁文字」另外設定）',
           fields: [
-            { name: 'ctaTitle', label: '標題', type: 'text' },
-            { name: 'ctaText', label: '說明', type: 'text' },
-            { name: 'ctaButton', label: '按鈕文字', type: 'text' },
+            { name: 'ctaTitle', localized: true, label: '標題', type: 'text' },
+            { name: 'ctaText', localized: true, label: '說明', type: 'text' },
+            { name: 'ctaButton', localized: true, label: '按鈕文字', type: 'text' },
           ],
         },
         {
@@ -65,14 +65,14 @@ export const SiteSettings: GlobalConfig = {
                 { name: 'bankAccountName', access: paymentRead, label: '戶名', type: 'text', admin: { width: '50%' } },
               ],
             },
-            { name: 'paymentNote', access: paymentRead, label: '付款說明', type: 'textarea', admin: { placeholder: '例如：匯款後請用 LINE 告知帳號末五碼' } },
+            { name: 'paymentNote', localized: true, access: paymentRead, label: '付款說明', type: 'textarea', admin: { placeholder: '例如：匯款後請用 LINE 告知帳號末五碼' } },
           ],
         },
         {
           label: 'SEO',
           fields: [
-            { name: 'seoTitle', label: '網站標題', type: 'text' },
-            { name: 'seoDescription', label: '網站描述', type: 'textarea' },
+            { name: 'seoTitle', localized: true, label: '網站標題', type: 'text' },
+            { name: 'seoDescription', localized: true, label: '網站描述', type: 'textarea' },
           ],
         },
       ],

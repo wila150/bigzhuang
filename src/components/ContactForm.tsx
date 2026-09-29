@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react'
 
-import { submitInquiry, type InquiryState } from '@/app/(frontend)/contact/actions'
+import { submitInquiry, type InquiryState } from '@/app/(frontend)/[lang]/contact/actions'
 import { splitOptions, type FormField } from '@/lib/contact-defaults'
 
 const initial: InquiryState = { status: 'idle' }
@@ -12,13 +12,14 @@ type Field = FormField & { id: string }
 type Props = {
   fields: Field[]
   services: string[]
-  texts: { contactHint: string; submitLabel: string; successTitle: string; successText: string }
+  texts: { contactHint: string; submitLabel: string; successTitle: string; successText: string; sending: string; selectPlaceholder: string }
+  lang: string
   contactHintFieldId?: string
 }
 
 const autoComplete: Record<string, string> = { name: 'name', email: 'email', phone: 'tel' }
 
-export function ContactForm({ fields, services, texts, contactHintFieldId }: Props) {
+export function ContactForm({ fields, services, texts, contactHintFieldId, lang }: Props) {
   const [state, action, pending] = useActionState(submitInquiry, initial)
 
   if (state.status === 'success') {
@@ -68,7 +69,7 @@ export function ContactForm({ fields, services, texts, contactHintFieldId }: Pro
               <textarea {...common} rows={6} />
             ) : f.type === 'select' ? (
               <select {...common} defaultValue={values[f.id] ?? ''}>
-                <option value="">{f.emptyOption || '請選擇'}</option>
+                <option value="">{f.emptyOption || texts.selectPlaceholder}</option>
                 {options.map((o) => (
                   <option key={o} value={o}>
                     {o}
@@ -87,6 +88,7 @@ export function ContactForm({ fields, services, texts, contactHintFieldId }: Pro
         )
       })}
 
+      <input name="lang" type="hidden" value={lang} />
       {/* Honeypot: real visitors never see or fill this. */}
       <div aria-hidden className="hp">
         <label htmlFor="website">Website</label>
@@ -94,7 +96,7 @@ export function ContactForm({ fields, services, texts, contactHintFieldId }: Pro
       </div>
 
       <button className="btn btn-accent btn-block field-full" disabled={pending} type="submit">
-        {pending ? '送出中…' : texts.submitLabel}
+        {pending ? texts.sending : texts.submitLabel}
       </button>
     </form>
   )

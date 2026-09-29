@@ -6,6 +6,7 @@ import * as migration_20260929_073628_line from './20260929_073628_line';
 import * as migration_20260929_075909_live_preview_drafts from './20260929_075909_live_preview_drafts';
 import * as migration_20260929_082714_line_inquiry_flow from './20260929_082714_line_inquiry_flow';
 import * as migration_20260929_085129_editable_contact from './20260929_085129_editable_contact';
+import * as migration_20260929_091720_localization from './20260929_091720_localization';
 
 export const migrations = [
   {
@@ -46,6 +47,11 @@ export const migrations = [
   {
     up: migration_20260929_085129_editable_contact.up,
     down: migration_20260929_085129_editable_contact.down,
-    name: '20260929_085129_editable_contact'
+    name: '20260929_085129_editable_contact',
+  },
+  {
+    up: migration_20260929_091720_localization.up,
+    down: migration_20260929_091720_localization.down,
+    name: '20260929_091720_localization'
   },
 ];

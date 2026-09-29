@@ -52,7 +52,7 @@ export default buildConfig({
         { name: 'mobile', label: '手機', width: 390, height: 844 },
         { name: 'desktop', label: '電腦', width: 1440, height: 900 },
       ],
-      url: ({ data, collectionConfig, globalConfig }) => {
+      url: ({ data, collectionConfig, globalConfig, locale }) => {
         const pagePath: Record<string, string> = {
           'home-page': '/',
           'about-page': '/about',
@@ -64,13 +64,24 @@ export default buildConfig({
         else if (collectionConfig?.slug === 'services' && data?.slug) path = `/services/${data.slug}`
         else if (collectionConfig?.slug === 'projects' && data?.slug) path = `/works/${data.slug}`
         if (!path) return null
-        return `${process.env.NEXT_PUBLIC_SERVER_URL || ''}/preview?path=${encodeURIComponent(path)}`
+        const localized = locale?.code === 'en' ? (path === '/' ? '/en' : `/en${path}`) : path
+        return `${process.env.NEXT_PUBLIC_SERVER_URL || ''}/preview?path=${encodeURIComponent(localized)}`
       },
     },
     meta: {
       titleSuffix: '｜BigZhaung 後台',
       icons: [{ rel: 'icon', url: '/favicon.ico' }],
     },
+  },
+  // Site content in two languages: Chinese at the root URLs, English under /en (see src/proxy.ts).
+  localization: {
+    locales: [
+      { label: '中文', code: 'zh' },
+      { label: 'English', code: 'en' },
+    ],
+    defaultLocale: 'zh',
+    // Untranslated English fields show the Chinese text instead of being blank.
+    fallback: true,
   },
   // Admin UI in Traditional Chinese by default; English stays selectable under 帳號 → 語言.
   i18n: {

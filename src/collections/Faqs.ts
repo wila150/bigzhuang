@@ -10,8 +10,8 @@ export const Faqs: CollectionConfig = {
   admin: { useAsTitle: 'question', group: '內容', defaultColumns: ['question', 'order'] },
   defaultSort: 'order',
   fields: [
-    { name: 'question', label: '問題', type: 'text', required: true },
-    { name: 'answer', label: '答案', type: 'textarea', required: true },
+    { name: 'question', localized: true, label: '問題', type: 'text', required: true },
+    { name: 'answer', localized: true, label: '答案', type: 'textarea', required: true },
     orderField,
   ],
 }
