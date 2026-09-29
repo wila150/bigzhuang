@@ -23,9 +23,15 @@ await graph(`/${appId}/subscriptions`, {
 console.log('webhook (page) →', callback)
 
 // 2. Subscribe this fan page to the app.
-const page = (await graph('/me?fields=id,name,instagram_business_account')) as { id: string; name: string; instagram_business_account?: { id: string } }
-await graph(`/${page.id}/subscribed_apps?subscribed_fields=${fields}`, { method: 'POST' })
-console.log('fan page subscribed:', page.name, page.id)
+// The page id comes from debug_token: reading /me on a page needs pages_read_engagement, which messaging-only apps don't get.
+const debug = (await graph(`/debug_token?input_token=${process.env.META_PAGE_ACCESS_TOKEN}`, {}, appToken)) as { data: { profile_id?: string } }
+const pageId = debug.data.profile_id
+if (!pageId) throw new Error('META_PAGE_ACCESS_TOKEN is not a fan page token')
+await graph(`/${pageId}/subscribed_apps?subscribed_fields=${fields}`, { method: 'POST' })
+console.log('fan page subscribed:', pageId)
+
+// The linked IG account is only readable with instagram_basic; without it, IG setup is skipped.
+const page = (await graph(`/${pageId}?fields=instagram_business_account`).catch(() => ({}))) as { instagram_business_account?: { id: string } }
 
 // 3. Messenger chat screen: greeting, Get Started button, and FAQ buttons (ice breakers).
 const iceBreakers = [
