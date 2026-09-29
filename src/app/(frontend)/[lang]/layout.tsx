@@ -46,6 +46,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       apple: '/apple-touch-icon.png',
     },
     manifest: '/site.webmanifest',
+    verification: { google: 'BCBPfciSAEc1UnnSg9GtCWWlCgWMh0KenIjmB2dA52o' },
     openGraph: {
       type: 'website',
       locale: ogLocale[lang],
