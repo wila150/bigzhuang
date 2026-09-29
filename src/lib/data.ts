@@ -1,26 +1,42 @@
 import config from '@payload-config'
-import { getPayload } from 'payload'
+import { draftMode } from 'next/headers'
+import { getPayload, type Where } from 'payload'
 import { cache } from 'react'
 
 import type { Category, Media, Project, Service } from '@/payload-types'
 
 export const getPayloadClient = cache(async () => getPayload({ config }))
 
+/** True inside the admin's Live Preview (draft mode is only ever enabled for admins, see /preview). */
+export const isPreview = cache(async () => (await draftMode()).isEnabled)
+
+/** Visitors see only published, 上架 docs; the preview shows the latest drafts. */
+async function visible(extra: Where[] = []): Promise<{ draft: boolean; where: Where }> {
+  const draft = await isPreview()
+  const rules: Where[] = [{ published: { equals: true } }, ...extra]
+  if (!draft) rules.push({ _status: { equals: 'published' } })
+  return { draft, where: { and: rules } }
+}
+
 export const getSettings = cache(async () =>
   (await getPayloadClient()).findGlobal({ slug: 'site-settings' }),
 )
 
-export const getHome = cache(async () => (await getPayloadClient()).findGlobal({ slug: 'home-page' }))
-export const getAbout = cache(async () => (await getPayloadClient()).findGlobal({ slug: 'about-page' }))
+export const getHome = cache(async () =>
+  (await getPayloadClient()).findGlobal({ slug: 'home-page', draft: await isPreview() }),
+)
+export const getAbout = cache(async () =>
+  (await getPayloadClient()).findGlobal({ slug: 'about-page', draft: await isPreview() }),
+)
 export const getProcess = cache(async () =>
-  (await getPayloadClient()).findGlobal({ slug: 'process-page' }),
+  (await getPayloadClient()).findGlobal({ slug: 'process-page', draft: await isPreview() }),
 )
 
 export const getServices = cache(async () => {
   const payload = await getPayloadClient()
   const res = await payload.find({
     collection: 'services',
-    where: { published: { equals: true } },
+    ...(await visible()),
     sort: 'order',
     limit: 50,
     depth: 1,
@@ -32,7 +48,7 @@ export const getService = cache(async (slug: string) => {
   const payload = await getPayloadClient()
   const res = await payload.find({
     collection: 'services',
-    where: { and: [{ slug: { equals: slug } }, { published: { equals: true } }] },
+    ...(await visible([{ slug: { equals: slug } }])),
     limit: 1,
     depth: 1,
   })
@@ -43,7 +59,7 @@ export const getProjects = cache(async () => {
   const payload = await getPayloadClient()
   const res = await payload.find({
     collection: 'projects',
-    where: { published: { equals: true } },
+    ...(await visible()),
     sort: 'order',
     limit: 200,
     depth: 2,

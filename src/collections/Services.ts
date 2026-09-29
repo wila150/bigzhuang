@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { isAdmin, publishedOrAdmin } from '../access'
+import { draftsWithAutosave } from '../fields/drafts'
 import { orderField, publishedField, slugField } from '../fields/slug'
 
 const titleDesc = [
@@ -12,6 +13,7 @@ export const Services: CollectionConfig = {
   slug: 'services',
   labels: { singular: '服務項目', plural: '服務項目' },
   access: { read: publishedOrAdmin, create: isAdmin, update: isAdmin, delete: isAdmin },
+  versions: draftsWithAutosave,
   admin: { useAsTitle: 'title', group: '內容', defaultColumns: ['title', 'order', 'published'] },
   defaultSort: 'order',
   fields: [

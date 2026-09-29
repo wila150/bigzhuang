@@ -1,11 +1,13 @@
 import type { GlobalConfig } from 'payload'
 
 import { anyone, isAdmin } from '../access'
+import { draftsWithAutosave } from '../fields/drafts'
 
 export const AboutPage: GlobalConfig = {
   slug: 'about-page',
   label: '關於大壯',
   access: { read: anyone, update: isAdmin },
+  versions: draftsWithAutosave,
   admin: { group: '頁面文字' },
   fields: [
     { name: 'photo', label: '照片或頭像', type: 'upload', relationTo: 'media' },

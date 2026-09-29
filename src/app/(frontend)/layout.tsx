@@ -5,7 +5,8 @@ import React from 'react'
 import { FloatingButtons } from '@/components/FloatingButtons'
 import { Footer } from '@/components/Footer'
 import { Header } from '@/components/Header'
-import { getActiveCategories, getServices, getSettings } from '@/lib/data'
+import { LivePreviewListener } from '@/components/LivePreviewListener'
+import { getActiveCategories, getServices, getSettings, isPreview } from '@/lib/data'
 
 import './styles.css'
 
@@ -48,7 +49,12 @@ export async function generateMetadata(): Promise<Metadata> {
 export const viewport: Viewport = { themeColor: '#0B2742' }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [settings, services, categories] = await Promise.all([getSettings(), getServices(), getActiveCategories()])
+  const [settings, services, categories, preview] = await Promise.all([
+    getSettings(),
+    getServices(),
+    getActiveCategories(),
+    isPreview(),
+  ])
 
   const nav = [
     { href: '/about', label: '關於大壯' },
@@ -79,6 +85,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <main id="main">{children}</main>
         <Footer settings={settings} />
         <FloatingButtons lineUrl={settings.lineUrl} />
+        {preview ? <LivePreviewListener /> : null}
       </body>
     </html>
   )

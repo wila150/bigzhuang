@@ -225,6 +225,7 @@ export interface Service {
   published?: boolean | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -339,6 +340,7 @@ export interface Project {
   published?: boolean | null;
   updatedAt: string;
   createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -628,6 +630,7 @@ export interface ServicesSelect<T extends boolean = true> {
   published?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -666,6 +669,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   published?: T;
   updatedAt?: T;
   createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -883,6 +887,7 @@ export interface HomePage {
     | null;
   ctaTitle?: string | null;
   ctaText?: string | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -902,6 +907,7 @@ export interface AboutPage {
       }[]
     | null;
   story?: string | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -920,6 +926,7 @@ export interface ProcessPage {
         id?: string | null;
       }[]
     | null;
+  _status?: ('draft' | 'published') | null;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -998,6 +1005,7 @@ export interface HomePageSelect<T extends boolean = true> {
       };
   ctaTitle?: T;
   ctaText?: T;
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1017,6 +1025,7 @@ export interface AboutPageSelect<T extends boolean = true> {
         id?: T;
       };
   story?: T;
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
@@ -1035,6 +1044,7 @@ export interface ProcessPageSelect<T extends boolean = true> {
         duration?: T;
         id?: T;
       };
+  _status?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

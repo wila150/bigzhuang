@@ -1,11 +1,13 @@
 import type { GlobalConfig } from 'payload'
 
 import { anyone, isAdmin } from '../access'
+import { draftsWithAutosave } from '../fields/drafts'
 
 export const ProcessPage: GlobalConfig = {
   slug: 'process-page',
   label: '合作流程',
   access: { read: anyone, update: isAdmin },
+  versions: draftsWithAutosave,
   admin: { group: '頁面文字' },
   fields: [
     { name: 'intro', label: '頁面說明', type: 'textarea' },

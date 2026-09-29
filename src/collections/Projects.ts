@@ -1,12 +1,14 @@
 import type { CollectionConfig } from 'payload'
 
 import { isAdmin, publishedOrAdmin } from '../access'
+import { draftsWithAutosave } from '../fields/drafts'
 import { orderField, publishedField, slugField } from '../fields/slug'
 
 export const Projects: CollectionConfig = {
   slug: 'projects',
   labels: { singular: '作品案例', plural: '作品案例' },
   access: { read: publishedOrAdmin, create: isAdmin, update: isAdmin, delete: isAdmin },
+  versions: draftsWithAutosave,
   admin: {
     useAsTitle: 'title',
     group: '內容',

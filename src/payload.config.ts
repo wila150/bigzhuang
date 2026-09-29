@@ -41,6 +41,25 @@ export default buildConfig({
     components: {
       afterLogin: ['@/components/admin/GoogleLoginButton'],
     },
+    // Side-by-side preview while editing, switchable between phone and desktop.
+    livePreview: {
+      collections: ['services', 'projects'],
+      globals: ['home-page', 'about-page', 'process-page'],
+      openByDefault: true,
+      breakpoints: [
+        { name: 'mobile', label: '手機', width: 390, height: 844 },
+        { name: 'desktop', label: '電腦', width: 1440, height: 900 },
+      ],
+      url: ({ data, collectionConfig, globalConfig }) => {
+        const pagePath: Record<string, string> = { 'home-page': '/', 'about-page': '/about', 'process-page': '/process' }
+        let path: string | undefined
+        if (globalConfig) path = pagePath[globalConfig.slug]
+        else if (collectionConfig?.slug === 'services' && data?.slug) path = `/services/${data.slug}`
+        else if (collectionConfig?.slug === 'projects' && data?.slug) path = `/works/${data.slug}`
+        if (!path) return null
+        return `${process.env.NEXT_PUBLIC_SERVER_URL || ''}/preview?path=${encodeURIComponent(path)}`
+      },
+    },
     meta: {
       titleSuffix: '｜BigZhaung 後台',
       icons: [{ rel: 'icon', url: '/favicon.ico' }],

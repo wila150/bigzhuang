@@ -1,11 +1,13 @@
 import type { GlobalConfig } from 'payload'
 
 import { anyone, isAdmin } from '../access'
+import { draftsWithAutosave } from '../fields/drafts'
 
 export const HomePage: GlobalConfig = {
   slug: 'home-page',
   label: '首頁文字',
   access: { read: anyone, update: isAdmin },
+  versions: draftsWithAutosave,
   admin: { group: '頁面文字' },
   fields: [
     { name: 'heroTitle', label: '主標語', type: 'text', required: true },
