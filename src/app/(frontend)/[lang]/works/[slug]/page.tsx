@@ -42,7 +42,11 @@ export default async function WorkPage({ params }: Props) {
 
   const shots = [
     project.cover ? { key: 'cover', m: project.cover, wide: true } : null,
-    ...(project.gallery ?? []).map((g, i) => ({ key: `g${i}`, m: g.image, wide: true })),
+    // Portrait gallery images (phone screenshots) get the narrow phone frame.
+    ...(project.gallery ?? []).map((g, i) => {
+      const m = media(g.image)
+      return { key: `g${i}`, m: g.image, wide: !m || (m.width ?? 1) >= (m.height ?? 0) }
+    }),
     project.mobileShot ? { key: 'mobile', m: project.mobileShot, wide: false } : null,
   ].filter((s): s is NonNullable<typeof s> => Boolean(s && media(s.m)))
 
