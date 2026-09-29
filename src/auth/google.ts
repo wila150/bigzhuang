@@ -1,5 +1,7 @@
 import { OAuth2Plugin } from 'payload-oauth2'
 
+import { isAdminEmail } from './admins'
+
 const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
 export const googleLoginEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
@@ -33,6 +35,7 @@ export const googleOAuth = OAuth2Plugin({
     if (!res.ok) throw new Error(`Google userinfo failed: ${res.status}`)
     const info = (await res.json()) as { sub?: string; email?: string; email_verified?: boolean }
     if (!info.email || !info.email_verified) throw new Error('Google account email is not verified')
+    if (!isAdminEmail(info.email)) throw new Error(`Google account ${info.email} is not an admin`)
     // Only these two fields are written back to the matched user.
     return { email: info.email.toLowerCase(), sub: info.sub }
   },
