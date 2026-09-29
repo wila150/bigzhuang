@@ -1,10 +1,9 @@
 import { getPayloadClient } from '@/lib/data'
 import { lineBindCode } from '@/line/bind-code'
-import { lineEnabled, reply, textWithButton, verifySignature, type LineMessage } from '@/line/client'
-import { handleInquiryFlow } from '@/line/inquiry-flow'
+import { respond, welcome } from '@/chat/engine'
+import { lineApi, lineEnabled, reply, verifySignature, type LineMessage } from '@/line/client'
+import { toLine } from '@/line/render'
 
-const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
-const absolute = (url: string) => (url.startsWith('/') ? `${serverURL}${url}` : url)
 
 type LineEvent = {
   type: string
@@ -38,45 +37,33 @@ export async function POST(req: Request) {
 
 async function handle(event: LineEvent, payload: Awaited<ReturnType<typeof getPayloadClient>>): Promise<LineMessage[] | null> {
   if (event.type === 'follow') {
-    const settings = await payload.findGlobal({ slug: 'line-settings', overrideAccess: true })
-    return settings.welcomeMessage ? [{ type: 'text', text: settings.welcomeMessage }] : null
+    const w = await welcome(payload)
+    return w ? toLine(w) : null
   }
 
   if (event.type !== 'message' || !event.message) return null
   const isText = event.message.type === 'text'
   const text = isText ? (event.message.text || '').trim() : placeholder(event.message.type)
   const userId = event.source?.userId
+  if (!userId) return null
 
-  // The guided inquiry takes priority while it is running (and starts on 線上詢價 / 詢價).
-  if (userId) {
-    const flow = await handleInquiryFlow(payload, userId, text, isText)
-    if (flow) return flow as LineMessage[]
-  }
-  if (!isText) return null
-
-  if (text === `綁定通知 ${lineBindCode()}` && userId) {
+  // LINE-only: bind this LINE account to receive admin notifications.
+  if (isText && text === `綁定通知 ${lineBindCode()}`) {
     await payload.updateGlobal({ slug: 'line-settings', overrideAccess: true, data: { adminUserId: userId } })
     return [{ type: 'text', text: '綁定完成！之後有新詢問或客戶付款，都會通知這個 LINE。' }]
   }
 
-  const { docs } = await payload.find({
-    collection: 'line-replies',
-    where: { enabled: { equals: true } },
-    sort: 'order',
-    limit: 100,
-    overrideAccess: true,
-  })
-  const lower = text.toLowerCase()
-  const match = docs.find((r) =>
-    r.keywords
-      .split(/[,，、]/)
-      .map((k) => k.trim().toLowerCase())
-      .some((k) => k && lower.includes(k)),
-  )
-  if (!match) return null // No auto-reply: leave it for a human in LINE chat.
+  const replies = await respond(payload, { platform: 'line', userId, text, isText, displayName: () => lineDisplayName(userId) })
+  return replies ? toLine(replies) : null // null: leave it for a human in LINE chat.
+}
 
-  const button = match.buttonLabel && match.buttonUrl ? { label: match.buttonLabel, url: absolute(match.buttonUrl) } : undefined
-  return textWithButton(match.reply, button)
+async function lineDisplayName(userId: string) {
+  try {
+    const profile = (await lineApi(`/v2/bot/profile/${userId}`)) as { displayName?: string }
+    return profile.displayName || 'LINE 使用者'
+  } catch {
+    return 'LINE 使用者'
+  }
 }
 
 function placeholder(type: string) {

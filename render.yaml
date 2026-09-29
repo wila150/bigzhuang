@@ -45,3 +45,12 @@ services:
         sync: false
       - key: LINE_CHANNEL_SECRET
         sync: false
+      # Facebook Messenger + Instagram DMs (Meta app). After deploying, run: npm run meta:setup
+      - key: META_APP_ID
+        sync: false
+      - key: META_APP_SECRET
+        sync: false
+      - key: META_PAGE_ACCESS_TOKEN
+        sync: false
+      - key: META_VERIFY_TOKEN
+        sync: false

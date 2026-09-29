@@ -371,7 +371,7 @@ export interface Inquiry {
   email?: string | null;
   phone?: string | null;
   lineId?: string | null;
-  source?: ('web' | 'line') | null;
+  source?: ('web' | 'line' | 'facebook' | 'instagram') | null;
   lineUserId?: string | null;
   service?: string | null;
   budget?: string | null;

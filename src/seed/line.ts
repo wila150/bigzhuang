@@ -5,7 +5,7 @@
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
-import { defaultDone, defaultIntro, defaultSteps } from '../line/inquiry-flow'
+import { defaultDone, defaultIntro, defaultSteps } from '../chat/engine'
 
 const payload = await getPayload({ config })
 const basicId = '@704ptxob'

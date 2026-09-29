@@ -25,5 +25,5 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   // Everything except the admin, APIs, webhooks, preview/payment endpoints, Next internals and files with an extension.
-  matcher: ['/((?!admin|api|_next|payments|line/webhook|preview|.*\\..*).*)'],
+  matcher: ['/((?!admin|api|_next|payments|line/webhook|meta/webhook|preview|.*\\..*).*)'],
 }

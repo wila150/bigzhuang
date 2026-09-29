@@ -60,3 +60,10 @@ In development, Payload syncs the database schema automatically. After changing 
 - In the admin, use the language switch at the top of any document to edit its English version. Blank English fields show the Chinese text.
 - Fixed UI text (buttons, headings, form messages) is in `src/i18n/dictionaries.ts`.
 - `npm run seed:english` fills English from the translation table in `src/seed/i18n-english-strings.ts` (used once when the site became bilingual).
+
+## Facebook Messenger and Instagram DMs
+
+- `/meta/webhook` answers fan page messages (and Instagram DMs once the IG professional account is linked to the fan page) with the same keyword replies and guided inquiry as LINE; the content is shared, edited under 後台 → LINE.
+- Code layout: `src/chat/engine.ts` decides the replies; `src/line/render.ts` and `src/meta/client.ts` turn them into LINE / Messenger messages.
+- After setting the `META_*` variables on Render and deploying, run `npm run meta:setup` once: it registers the webhook, subscribes the fan page, and sets the Messenger greeting, Get Started button and FAQ buttons.
+- Until the Meta app passes App Review, only people with a role on the app get replies.
