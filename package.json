@@ -1,7 +1,7 @@
 {
-  "name": "web",
+  "name": "bigzhaung-web",
   "version": "1.0.0",
-  "description": "A blank template to get started with Payload 3.0",
+  "description": "BigZhaung 大壯做網站 official site (Next.js + Payload CMS)",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -13,13 +13,16 @@
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
-    "test": "pnpm run test:int && pnpm run test:e2e",
-    "test:e2e": "cross-env NODE_OPTIONS=\"--no-deprecation --import=tsx/esm\" playwright test --config=playwright.config.ts",
-    "test:int": "cross-env NODE_OPTIONS=--no-deprecation vitest run --config ./vitest.config.mts"
+    "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/index.ts",
+    "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
+    "start:prod": "npm run migrate && npm start",
+    "import:shots": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/case-shots.ts"
   },
   "dependencies": {
+    "@payloadcms/db-postgres": "3.90.2",
     "@payloadcms/next": "3.90.2",
     "@payloadcms/richtext-lexical": "3.90.2",
+    "@payloadcms/storage-s3": "^3.90.2",
     "@payloadcms/ui": "3.90.2",
     "cross-env": "^7.0.3",
     "dotenv": "16.4.7",
@@ -28,8 +31,7 @@
     "payload": "3.90.2",
     "react": "19.2.6",
     "react-dom": "19.2.6",
-    "sharp": "0.35.4",
-    "@payloadcms/db-postgres": "3.90.2"
+    "sharp": "0.35.4"
   },
   "devDependencies": {
     "@playwright/test": "1.58.2",
@@ -48,14 +50,6 @@
     "vitest": "4.0.18"
   },
   "engines": {
-    "node": "^18.20.2 || >=20.9.0",
-    "pnpm": "^9 || ^10 || ^11"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "sharp",
-      "esbuild",
-      "unrs-resolver"
-    ]
+    "node": ">=20.9.0"
   }
 }
