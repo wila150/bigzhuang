@@ -1,6 +1,7 @@
 import { getPayloadClient } from '@/lib/data'
 import { lineBindCode } from '@/line/bind-code'
 import { lineEnabled, reply, textWithButton, verifySignature, type LineMessage } from '@/line/client'
+import { handleInquiryFlow } from '@/line/inquiry-flow'
 
 const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 const absolute = (url: string) => (url.startsWith('/') ? `${serverURL}${url}` : url)
@@ -10,6 +11,7 @@ type LineEvent = {
   replyToken?: string
   source?: { userId?: string }
   message?: { type: string; text?: string }
+  postback?: { data?: string }
 }
 
 // LINE Messaging API webhook: welcome message on follow, keyword auto-replies, and notification binding.
@@ -40,11 +42,20 @@ async function handle(event: LineEvent, payload: Awaited<ReturnType<typeof getPa
     return settings.welcomeMessage ? [{ type: 'text', text: settings.welcomeMessage }] : null
   }
 
-  if (event.type !== 'message' || event.message?.type !== 'text') return null
-  const text = (event.message.text || '').trim()
+  if (event.type !== 'message' || !event.message) return null
+  const isText = event.message.type === 'text'
+  const text = isText ? (event.message.text || '').trim() : placeholder(event.message.type)
+  const userId = event.source?.userId
 
-  if (text === `綁定通知 ${lineBindCode()}` && event.source?.userId) {
-    await payload.updateGlobal({ slug: 'line-settings', overrideAccess: true, data: { adminUserId: event.source.userId } })
+  // The guided inquiry takes priority while it is running (and starts on 線上詢價 / 詢價).
+  if (userId) {
+    const flow = await handleInquiryFlow(payload, userId, text, isText)
+    if (flow) return flow as LineMessage[]
+  }
+  if (!isText) return null
+
+  if (text === `綁定通知 ${lineBindCode()}` && userId) {
+    await payload.updateGlobal({ slug: 'line-settings', overrideAccess: true, data: { adminUserId: userId } })
     return [{ type: 'text', text: '綁定完成！之後有新詢問或客戶付款，都會通知這個 LINE。' }]
   }
 
@@ -66,4 +77,9 @@ async function handle(event: LineEvent, payload: Awaited<ReturnType<typeof getPa
 
   const button = match.buttonLabel && match.buttonUrl ? { label: match.buttonLabel, url: absolute(match.buttonUrl) } : undefined
   return textWithButton(match.reply, button)
+}
+
+function placeholder(type: string) {
+  const names: Record<string, string> = { image: '圖片', video: '影片', sticker: '貼圖', file: '檔案', audio: '語音', location: '位置' }
+  return `（傳了${names[type] ?? '訊息'}，請到 LINE 聊天室查看）`
 }

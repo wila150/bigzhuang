@@ -75,6 +75,7 @@ export interface Config {
     media: Media;
     inquiries: Inquiry;
     'line-replies': LineReply;
+    'line-sessions': LineSession;
     users: User;
     clients: Client;
     'payload-kv': PayloadKv;
@@ -91,6 +92,7 @@ export interface Config {
     media: MediaSelect<false> | MediaSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
     'line-replies': LineRepliesSelect<false> | LineRepliesSelect<true>;
+    'line-sessions': LineSessionsSelect<false> | LineSessionsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -367,6 +369,8 @@ export interface Inquiry {
   email?: string | null;
   phone?: string | null;
   lineId?: string | null;
+  source?: ('web' | 'line') | null;
+  lineUserId?: string | null;
   service?: string | null;
   budget?: string | null;
   message: string;
@@ -402,6 +406,27 @@ export interface LineReply {
    * 數字小的排前面
    */
   order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "line-sessions".
+ */
+export interface LineSession {
+  id: number;
+  userId: string;
+  displayName?: string | null;
+  step: number;
+  answers?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -519,6 +544,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'line-replies';
         value: number | LineReply;
+      } | null)
+    | ({
+        relationTo: 'line-sessions';
+        value: number | LineSession;
       } | null)
     | ({
         relationTo: 'users';
@@ -754,6 +783,8 @@ export interface InquiriesSelect<T extends boolean = true> {
   email?: T;
   phone?: T;
   lineId?: T;
+  source?: T;
+  lineUserId?: T;
   service?: T;
   budget?: T;
   message?: T;
@@ -774,6 +805,18 @@ export interface LineRepliesSelect<T extends boolean = true> {
   buttonUrl?: T;
   enabled?: T;
   order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "line-sessions_select".
+ */
+export interface LineSessionsSelect<T extends boolean = true> {
+  userId?: T;
+  displayName?: T;
+  step?: T;
+  answers?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -983,6 +1026,22 @@ export interface LineSetting {
    * 用你的 LINE 把這整句傳給官方帳號
    */
   bindCommand?: string | null;
+  /**
+   * 客人按圖文選單「線上詢價」或傳「詢價」後，依序一題一題問。問完會自動建立一張詢問單並通知你。
+   */
+  inquirySteps?:
+    | {
+        question: string;
+        /**
+         * 用逗號分隔，會變成可以直接點的按鈕，例如：形象網站,購物網站,還不確定
+         */
+        options?: string | null;
+        saveTo?: ('message' | 'service' | 'budget') | null;
+        id?: string | null;
+      }[]
+    | null;
+  inquiryIntro?: string | null;
+  inquiryDone?: string | null;
   notifyInquiry?: boolean | null;
   notifyPayment?: boolean | null;
   updatedAt?: string | null;
@@ -1086,6 +1145,16 @@ export interface LineSettingsSelect<T extends boolean = true> {
   welcomeMessage?: T;
   adminUserId?: T;
   bindCommand?: T;
+  inquirySteps?:
+    | T
+    | {
+        question?: T;
+        options?: T;
+        saveTo?: T;
+        id?: T;
+      };
+  inquiryIntro?: T;
+  inquiryDone?: T;
   notifyInquiry?: T;
   notifyPayment?: T;
   updatedAt?: T;

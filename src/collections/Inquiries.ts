@@ -19,7 +19,7 @@ export const Inquiries: CollectionConfig = {
       async ({ doc, operation, req }) => {
         if (operation !== 'create') return
         const lines = [
-          '新的網站詢問',
+          doc.source === 'line' ? '新的 LINE 線上詢價（到 LINE 聊天室回覆）' : '新的網站詢問',
           `姓名：${doc.name}`,
           doc.service && `服務：${doc.service}`,
           doc.budget && `預算：${doc.budget}`,
@@ -43,6 +43,23 @@ export const Inquiries: CollectionConfig = {
       ],
     },
     { name: 'lineId', label: 'LINE ID', type: 'text' },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'source',
+          label: '來源',
+          type: 'select',
+          defaultValue: 'web',
+          options: [
+            { label: '網站表單', value: 'web' },
+            { label: 'LINE 線上詢價', value: 'line' },
+          ],
+          admin: { width: '50%' },
+        },
+        { name: 'lineUserId', label: 'LINE User ID', type: 'text', admin: { width: '50%', readOnly: true } },
+      ],
+    },
     { name: 'service', label: '想做的服務', type: 'text' },
     { name: 'budget', label: '預算', type: 'text' },
     { name: 'message', label: '需求說明', type: 'textarea', required: true },

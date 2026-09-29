@@ -14,6 +14,7 @@ import { Clients } from './collections/Clients'
 import { Faqs } from './collections/Faqs'
 import { Inquiries } from './collections/Inquiries'
 import { LineReplies } from './collections/LineReplies'
+import { LineSessions } from './collections/LineSessions'
 import { Media } from './collections/Media'
 import { Projects } from './collections/Projects'
 import { Services } from './collections/Services'
@@ -70,7 +71,7 @@ export default buildConfig({
     supportedLanguages: { 'zh-TW': zhTw, en },
     fallbackLanguage: 'zh-TW',
   },
-  collections: [Services, Projects, Categories, Faqs, Media, Inquiries, Clients, LineReplies, Users],
+  collections: [Services, Projects, Categories, Faqs, Media, Inquiries, Clients, LineReplies, LineSessions, Users],
   globals: [HomePage, AboutPage, ProcessPage, SiteSettings, LineSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

@@ -30,6 +30,37 @@ export const LineSettings: GlobalConfig = {
       hooks: { afterRead: [() => `綁定通知 ${lineBindCode()}`] },
     },
     {
+      name: 'inquirySteps',
+      label: '線上詢價：引導問題',
+      type: 'array',
+      admin: {
+        description: '客人按圖文選單「線上詢價」或傳「詢價」後，依序一題一題問。問完會自動建立一張詢問單並通知你。',
+        initCollapsed: true,
+      },
+      fields: [
+        { name: 'question', label: '問題', type: 'textarea', required: true },
+        {
+          name: 'options',
+          label: '快速選項（選填）',
+          type: 'text',
+          admin: { description: '用逗號分隔，會變成可以直接點的按鈕，例如：形象網站,購物網站,還不確定' },
+        },
+        {
+          name: 'saveTo',
+          label: '答案存到詢問單的',
+          type: 'select',
+          defaultValue: 'message',
+          options: [
+            { label: '需求說明', value: 'message' },
+            { label: '想做的服務', value: 'service' },
+            { label: '預算', value: 'budget' },
+          ],
+        },
+      ],
+    },
+    { name: 'inquiryIntro', label: '線上詢價：開場白', type: 'textarea' },
+    { name: 'inquiryDone', label: '線上詢價：完成訊息', type: 'textarea' },
+    {
       type: 'row',
       fields: [
         { name: 'notifyInquiry', label: '有新詢問單時通知我', type: 'checkbox', defaultValue: true, admin: { width: '50%' } },

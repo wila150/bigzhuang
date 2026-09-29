@@ -5,6 +5,8 @@
 import config from '@payload-config'
 import { getPayload } from 'payload'
 
+import { defaultDone, defaultIntro, defaultSteps } from '../line/inquiry-flow'
+
 const payload = await getPayload({ config })
 const basicId = '@704ptxob'
 
@@ -27,17 +29,17 @@ if (!line.welcomeMessage) {
   })
 }
 
+const lineNow = await payload.findGlobal({ slug: 'line-settings' })
+if (!lineNow.inquirySteps?.length) {
+  await payload.updateGlobal({
+    slug: 'line-settings',
+    data: { inquirySteps: defaultSteps, inquiryIntro: lineNow.inquiryIntro || defaultIntro, inquiryDone: lineNow.inquiryDone || defaultDone },
+  })
+}
+
 const { totalDocs } = await payload.count({ collection: 'line-replies' })
 if (totalDocs === 0) {
   const replies = [
-    {
-      title: '線上詢價',
-      keywords: '線上詢價,詢價,我要詢價,想做網站',
-      reply:
-        '謝謝你想找大壯做網站！\n\n直接在這裡回覆下面幾點，我會在一個工作天內給你初步報價：\n\n1. 想做的網站類型（形象網站、購物網站、預約或報名系統…）\n2. 需要的頁面或功能\n3. 有沒有喜歡的參考網站\n4. 預算範圍\n5. 希望什麼時候上線\n\n不確定也沒關係，先簡單說說你的想法就好。想用表單的話，點下方按鈕。',
-      buttonLabel: '填寫詢價表單',
-      buttonUrl: '/contact',
-    },
     {
       title: '報價',
       keywords: '報價,價格,多少錢,費用,預算',

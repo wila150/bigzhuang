@@ -4,6 +4,7 @@ import * as migration_20260929_070006_google_login from './20260929_070006_googl
 import * as migration_20260929_072805_client_portal from './20260929_072805_client_portal';
 import * as migration_20260929_073628_line from './20260929_073628_line';
 import * as migration_20260929_075909_live_preview_drafts from './20260929_075909_live_preview_drafts';
+import * as migration_20260929_082714_line_inquiry_flow from './20260929_082714_line_inquiry_flow';
 
 export const migrations = [
   {
@@ -34,6 +35,11 @@ export const migrations = [
   {
     up: migration_20260929_075909_live_preview_drafts.up,
     down: migration_20260929_075909_live_preview_drafts.down,
-    name: '20260929_075909_live_preview_drafts'
+    name: '20260929_075909_live_preview_drafts',
+  },
+  {
+    up: migration_20260929_082714_line_inquiry_flow.up,
+    down: migration_20260929_082714_line_inquiry_flow.down,
+    name: '20260929_082714_line_inquiry_flow'
   },
 ];
