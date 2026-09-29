@@ -6,6 +6,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
+import { googleOAuth } from './auth/google'
 import { Categories } from './collections/Categories'
 import { Clients } from './collections/Clients'
 import { Faqs } from './collections/Faqs'
@@ -33,6 +34,9 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    components: {
+      afterLogin: ['@/components/admin/GoogleLoginButton'],
+    },
     meta: {
       titleSuffix: '｜BigZhaung 後台',
       icons: [{ rel: 'icon', url: '/favicon.ico' }],
@@ -53,6 +57,7 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
+    googleOAuth,
     s3Storage({
       enabled: useS3,
       collections: { media: true },
