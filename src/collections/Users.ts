@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 import { APIError } from 'payload'
 
+import { isAdmin } from '../access'
 import { isAdminEmail } from '../auth/admins'
 
 export const Users: CollectionConfig = {
@@ -9,6 +10,10 @@ export const Users: CollectionConfig = {
   admin: { useAsTitle: 'email', group: '系統' },
   auth: true,
   access: {
+    read: isAdmin,
+    create: isAdmin,
+    update: isAdmin,
+    delete: isAdmin,
     // Even a stray account in the database can't open the admin unless its email is allowlisted.
     admin: ({ req }) => isAdminEmail(req.user?.email),
   },

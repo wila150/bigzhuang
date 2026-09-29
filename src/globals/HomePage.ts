@@ -1,11 +1,11 @@
 import type { GlobalConfig } from 'payload'
 
-import { anyone, loggedIn } from '../access'
+import { anyone, isAdmin } from '../access'
 
 export const HomePage: GlobalConfig = {
   slug: 'home-page',
   label: '首頁文字',
-  access: { read: anyone, update: loggedIn },
+  access: { read: anyone, update: isAdmin },
   admin: { group: '頁面文字' },
   fields: [
     { name: 'heroTitle', label: '主標語', type: 'text', required: true },

@@ -1,11 +1,11 @@
 import type { GlobalConfig } from 'payload'
 
-import { anyone, loggedIn } from '../access'
+import { anyone, isAdmin } from '../access'
 
 export const AboutPage: GlobalConfig = {
   slug: 'about-page',
   label: '關於大壯',
-  access: { read: anyone, update: loggedIn },
+  access: { read: anyone, update: isAdmin },
   admin: { group: '頁面文字' },
   fields: [
     { name: 'photo', label: '照片或頭像', type: 'upload', relationTo: 'media' },

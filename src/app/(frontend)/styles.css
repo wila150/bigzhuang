@@ -1661,3 +1661,143 @@ a:hover .text-link svg,
   display: grid;
   place-items: center;
 }
+
+/* ===== Customer portal ===== */
+.btn-sm {
+  min-height: 38px;
+  padding: 0 16px;
+  font-size: 0.9rem;
+}
+.account-login {
+  max-width: 480px;
+  display: grid;
+  gap: 16px;
+}
+.btn-google {
+  min-height: 52px;
+}
+.form-success-inline {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: #e7f6ec;
+  color: #1d6b3a;
+}
+.account .form-error,
+.account .form-success-inline {
+  margin-bottom: 24px;
+}
+.account-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+.account-summary > div {
+  padding: 20px;
+  border-radius: var(--radius);
+  background: var(--cream);
+  display: grid;
+  gap: 4px;
+}
+.account-summary span {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.account-summary strong {
+  color: var(--navy);
+  font-size: 1.15rem;
+  word-break: break-all;
+}
+.account-summary .is-due {
+  color: var(--accent);
+}
+.table-wrap {
+  overflow-x: auto;
+  margin-bottom: 48px;
+}
+.bill-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 560px;
+}
+.bill-table th,
+.bill-table td {
+  text-align: left;
+  padding: 14px 12px;
+  border-bottom: 1px solid var(--line);
+}
+.bill-table th {
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+.bill-status {
+  display: inline-block;
+  padding: 2px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.bill-status.is-paid {
+  background: #e7f6ec;
+  color: #1d6b3a;
+}
+.bill-status.is-unpaid {
+  background: var(--navy-50);
+  color: var(--navy);
+}
+.bill-status.is-overdue {
+  background: var(--accent-50);
+  color: var(--accent-600);
+}
+.bill-paid {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+.bank-box {
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  margin-bottom: 40px;
+}
+.bank-box dl {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+.bank-box dl > div {
+  display: flex;
+  gap: 16px;
+}
+.bank-box dt {
+  width: 3em;
+  color: var(--ink-soft);
+}
+.bank-box dd {
+  margin: 0;
+  font-weight: 500;
+  color: var(--navy);
+}
+.mono {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+.account-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+@media (max-width: 700px) {
+  .account-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.footer-bottom-links {
+  display: flex;
+  gap: 20px;
+}

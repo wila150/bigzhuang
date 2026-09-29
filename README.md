@@ -27,7 +27,7 @@ In development, Payload syncs the database schema automatically. After changing 
 | 首頁文字 / 關於大壯 / 合作流程 | Page copy |
 | 網站設定 | LINE / Email / IG, footer keywords, SEO title and description |
 | 詢問單 | Contact form submissions and their status |
-| 客戶與月費 | Clients, monthly fees, bills (admin only) |
+| 客戶與月費 | Clients, monthly fees, bills. Each client signs in to `/account` with Google (the 登入 Email) and sees only their own bills |
 
 ## Deploy (Render + Supabase)
 
@@ -40,3 +40,10 @@ In development, Payload syncs the database schema automatically. After changing 
    - `S3_BUCKET` = `media`
 3. Every start runs `payload migrate` before `next start`, so migrations in `src/migrations` are applied automatically.
 4. After changing a collection, run `npm run payload migrate:create <name>` and commit the new migration.
+
+## Customer portal and card payments
+
+- `/account`: clients sign in with Google and see their bills. Bank details come from 網站設定 → 付款資訊.
+- The 刷卡付款 button appears once `ECPAY_MERCHANT_ID`, `ECPAY_HASH_KEY` and `ECPAY_HASH_IV` are set.
+- ECPay posts payment results to `/payments/ecpay/notify`, which verifies the signature and amount, then marks the bill 已繳.
+- Try it in the sandbox with `ECPAY_ENV=stage` and the test merchant listed in `.env.example`.

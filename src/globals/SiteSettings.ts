@@ -1,11 +1,13 @@
 import type { GlobalConfig } from 'payload'
 
-import { anyone, loggedIn } from '../access'
+import { adminOrClientField, anyone, isAdmin } from '../access'
+
+const paymentRead = { read: adminOrClientField }
 
 export const SiteSettings: GlobalConfig = {
   slug: 'site-settings',
   label: '網站設定',
-  access: { read: anyone, update: loggedIn },
+  access: { read: anyone, update: isAdmin },
   admin: { group: '設定' },
   fields: [
     {
@@ -34,6 +36,27 @@ export const SiteSettings: GlobalConfig = {
                 { name: 'href', label: '連結', type: 'text', required: true },
               ],
             },
+          ],
+        },
+        {
+          label: '付款資訊',
+          description: '顯示在客戶專區，給選擇匯款的客戶參考',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                { name: 'bankName', access: paymentRead, label: '銀行名稱', type: 'text', admin: { width: '50%', placeholder: '例如 國泰世華' } },
+                { name: 'bankCode', access: paymentRead, label: '銀行代碼', type: 'text', admin: { width: '50%', placeholder: '例如 013' } },
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                { name: 'bankAccount', access: paymentRead, label: '帳號', type: 'text', admin: { width: '50%' } },
+                { name: 'bankAccountName', access: paymentRead, label: '戶名', type: 'text', admin: { width: '50%' } },
+              ],
+            },
+            { name: 'paymentNote', access: paymentRead, label: '付款說明', type: 'textarea', admin: { placeholder: '例如：匯款後請用 LINE 告知帳號末五碼' } },
           ],
         },
         {

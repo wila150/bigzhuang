@@ -64,6 +64,7 @@ export type SupportedTimezones =
 export interface Config {
   auth: {
     users: UserAuthOperations;
+    clients: ClientAuthOperations;
   };
   blocks: {};
   collections: {
@@ -73,8 +74,8 @@ export interface Config {
     faqs: Faq;
     media: Media;
     inquiries: Inquiry;
-    clients: Client;
     users: User;
+    clients: Client;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -88,8 +89,8 @@ export interface Config {
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
-    clients: ClientsSelect<false> | ClientsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
+    clients: ClientsSelect<false> | ClientsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -115,13 +116,31 @@ export interface Config {
   widgets: {
     collections: CollectionsWidget;
   };
-  user: User;
+  user: User | Client;
   jobs: {
     tasks: unknown;
     workflows: unknown;
   };
 }
 export interface UserAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
+  };
+}
+export interface ClientAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -352,29 +371,6 @@ export interface Inquiry {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "clients".
- */
-export interface Client {
-  id: number;
-  name: string;
-  contact?: string | null;
-  site?: string | null;
-  monthlyFee?: number | null;
-  billingDay?: number | null;
-  bills?:
-    | {
-        month: string;
-        amount?: number | null;
-        status?: ('unpaid' | 'paid' | 'overdue') | null;
-        id?: string | null;
-      }[]
-    | null;
-  note?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -399,6 +395,42 @@ export interface User {
     | null;
   password?: string | null;
   collection: 'users';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients".
+ */
+export interface Client {
+  id: number;
+  name: string;
+  /**
+   * 客戶用這個 Google 帳號登入「客戶專區」查看與支付帳單
+   */
+  email: string;
+  contact?: string | null;
+  site?: string | null;
+  monthlyFee?: number | null;
+  billingDay?: number | null;
+  bills?:
+    | {
+        month: string;
+        amount: number;
+        dueDate?: string | null;
+        status?: ('unpaid' | 'paid' | 'overdue') | null;
+        paymentMethod?: ('card' | 'transfer' | 'other') | null;
+        paidAt?: string | null;
+        /**
+         * 刷卡時自動產生
+         */
+        tradeNo?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  note?: string | null;
+  sub?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  collection: 'clients';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -449,18 +481,23 @@ export interface PayloadLockedDocument {
         value: number | Inquiry;
       } | null)
     | ({
-        relationTo: 'clients';
-        value: number | Client;
-      } | null)
-    | ({
         relationTo: 'users';
         value: number | User;
+      } | null)
+    | ({
+        relationTo: 'clients';
+        value: number | Client;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'clients';
+        value: number | Client;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -470,10 +507,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: number;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'users';
+        value: number | User;
+      }
+    | {
+        relationTo: 'clients';
+        value: number | Client;
+      };
   key?: string | null;
   value?:
     | {
@@ -680,28 +722,6 @@ export interface InquiriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "clients_select".
- */
-export interface ClientsSelect<T extends boolean = true> {
-  name?: T;
-  contact?: T;
-  site?: T;
-  monthlyFee?: T;
-  billingDay?: T;
-  bills?:
-    | T
-    | {
-        month?: T;
-        amount?: T;
-        status?: T;
-        id?: T;
-      };
-  note?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -723,6 +743,34 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clients_select".
+ */
+export interface ClientsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  contact?: T;
+  site?: T;
+  monthlyFee?: T;
+  billingDay?: T;
+  bills?:
+    | T
+    | {
+        month?: T;
+        amount?: T;
+        dueDate?: T;
+        status?: T;
+        paymentMethod?: T;
+        paidAt?: T;
+        tradeNo?: T;
+        id?: T;
+      };
+  note?: T;
+  sub?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -847,6 +895,11 @@ export interface SiteSetting {
         id?: string | null;
       }[]
     | null;
+  bankName?: string | null;
+  bankCode?: string | null;
+  bankAccount?: string | null;
+  bankAccountName?: string | null;
+  paymentNote?: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
   updatedAt?: string | null;
@@ -928,6 +981,11 @@ export interface SiteSettingsSelect<T extends boolean = true> {
         href?: T;
         id?: T;
       };
+  bankName?: T;
+  bankCode?: T;
+  bankAccount?: T;
+  bankAccountName?: T;
+  paymentNote?: T;
   seoTitle?: T;
   seoDescription?: T;
   updatedAt?: T;

@@ -96,7 +96,10 @@ export function Footer({ settings }: { settings: SiteSetting }) {
       <div className="footer-bottom">
         <div className="container footer-bottom-inner">
           <span>© {year} BigZhaung 大壯做網站. All rights reserved.</span>
-          <Link href="/privacy">隱私權政策</Link>
+          <span className="footer-bottom-links">
+            <Link href="/account">客戶專區</Link>
+            <Link href="/privacy">隱私權政策</Link>
+          </span>
         </div>
       </div>
     </footer>

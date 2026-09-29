@@ -1,12 +1,12 @@
 import type { CollectionConfig } from 'payload'
 
-import { anyone, loggedIn } from '../access'
+import { anyone, isAdmin } from '../access'
 import { orderField } from '../fields/slug'
 
 export const Faqs: CollectionConfig = {
   slug: 'faqs',
   labels: { singular: '常見問題', plural: '常見問題' },
-  access: { read: anyone, create: loggedIn, update: loggedIn, delete: loggedIn },
+  access: { read: anyone, create: isAdmin, update: isAdmin, delete: isAdmin },
   admin: { useAsTitle: 'question', group: '內容', defaultColumns: ['question', 'order'] },
   defaultSort: 'order',
   fields: [

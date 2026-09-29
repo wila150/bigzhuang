@@ -1,12 +1,12 @@
 import type { CollectionConfig } from 'payload'
 
-import { loggedIn } from '../access'
+import { isAdmin } from '../access'
 
 export const Inquiries: CollectionConfig = {
   slug: 'inquiries',
   labels: { singular: '詢問單', plural: '詢問單' },
   // Created only through the contact form's server action (which uses overrideAccess).
-  access: { read: loggedIn, create: loggedIn, update: loggedIn, delete: loggedIn },
+  access: { read: isAdmin, create: isAdmin, update: isAdmin, delete: isAdmin },
   admin: {
     useAsTitle: 'name',
     group: '營運',

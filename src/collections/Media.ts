@@ -1,11 +1,11 @@
 import type { CollectionConfig } from 'payload'
 
-import { anyone, loggedIn } from '../access'
+import { anyone, isAdmin } from '../access'
 
 export const Media: CollectionConfig = {
   slug: 'media',
   labels: { singular: '圖片', plural: '媒體庫' },
-  access: { read: anyone, create: loggedIn, update: loggedIn, delete: loggedIn },
+  access: { read: anyone, create: isAdmin, update: isAdmin, delete: isAdmin },
   admin: { group: '內容' },
   fields: [
     {

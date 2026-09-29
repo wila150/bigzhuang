@@ -1,12 +1,14 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { s3Storage } from '@payloadcms/storage-s3'
+import { en } from '@payloadcms/translations/languages/en'
+import { zhTw } from '@payloadcms/translations/languages/zhTw'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
-import { googleOAuth } from './auth/google'
+import { googleOAuthAdmin, googleOAuthClients } from './auth/google'
 import { Categories } from './collections/Categories'
 import { Clients } from './collections/Clients'
 import { Faqs } from './collections/Faqs'
@@ -42,6 +44,11 @@ export default buildConfig({
       icons: [{ rel: 'icon', url: '/favicon.ico' }],
     },
   },
+  // Admin UI in Traditional Chinese by default; English stays selectable under 帳號 → 語言.
+  i18n: {
+    supportedLanguages: { 'zh-TW': zhTw, en },
+    fallbackLanguage: 'zh-TW',
+  },
   collections: [Services, Projects, Categories, Faqs, Media, Inquiries, Clients, Users],
   globals: [HomePage, AboutPage, ProcessPage, SiteSettings],
   editor: lexicalEditor(),
@@ -57,7 +64,8 @@ export default buildConfig({
   }),
   sharp,
   plugins: [
-    googleOAuth,
+    googleOAuthAdmin,
+    googleOAuthClients,
     s3Storage({
       enabled: useS3,
       collections: { media: true },

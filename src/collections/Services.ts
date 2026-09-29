@@ -1,6 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
-import { loggedIn, publishedOrLoggedIn } from '../access'
+import { isAdmin, publishedOrAdmin } from '../access'
 import { orderField, publishedField, slugField } from '../fields/slug'
 
 const titleDesc = [
@@ -11,7 +11,7 @@ const titleDesc = [
 export const Services: CollectionConfig = {
   slug: 'services',
   labels: { singular: '服務項目', plural: '服務項目' },
-  access: { read: publishedOrLoggedIn, create: loggedIn, update: loggedIn, delete: loggedIn },
+  access: { read: publishedOrAdmin, create: isAdmin, update: isAdmin, delete: isAdmin },
   admin: { useAsTitle: 'title', group: '內容', defaultColumns: ['title', 'order', 'published'] },
   defaultSort: 'order',
   fields: [
