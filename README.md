@@ -47,3 +47,9 @@ In development, Payload syncs the database schema automatically. After changing 
 - The 刷卡付款 button appears once `ECPAY_MERCHANT_ID`, `ECPAY_HASH_KEY` and `ECPAY_HASH_IV` are set.
 - ECPay posts payment results to `/payments/ecpay/notify`, which verifies the signature and amount, then marks the bill 已繳.
 - Try it in the sandbox with `ECPAY_ENV=stage` and the test merchant listed in `.env.example`.
+
+## LINE Official Account
+
+- `/line/webhook` sends the welcome message when someone adds the account, and keyword auto-replies (edit them in 後台 → LINE 自動回覆). Messages that match no keyword get no reply, so you can answer them yourself.
+- New inquiries and card payments are pushed to your LINE. To bind your account, send the command shown in 後台 → LINE 設定 from your own LINE.
+- Rich menu: the image is `public/line/richmenu.jpg` (source `src/line/richmenu/menu.html`). `npm run line:setup` publishes it and sets the webhook URL. Rerun it after changing the domain.

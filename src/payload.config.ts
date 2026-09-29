@@ -13,12 +13,14 @@ import { Categories } from './collections/Categories'
 import { Clients } from './collections/Clients'
 import { Faqs } from './collections/Faqs'
 import { Inquiries } from './collections/Inquiries'
+import { LineReplies } from './collections/LineReplies'
 import { Media } from './collections/Media'
 import { Projects } from './collections/Projects'
 import { Services } from './collections/Services'
 import { Users } from './collections/Users'
 import { AboutPage } from './globals/AboutPage'
 import { HomePage } from './globals/HomePage'
+import { LineSettings } from './globals/LineSettings'
 import { ProcessPage } from './globals/ProcessPage'
 import { SiteSettings } from './globals/SiteSettings'
 
@@ -49,8 +51,8 @@ export default buildConfig({
     supportedLanguages: { 'zh-TW': zhTw, en },
     fallbackLanguage: 'zh-TW',
   },
-  collections: [Services, Projects, Categories, Faqs, Media, Inquiries, Clients, Users],
-  globals: [HomePage, AboutPage, ProcessPage, SiteSettings],
+  collections: [Services, Projects, Categories, Faqs, Media, Inquiries, Clients, LineReplies, Users],
+  globals: [HomePage, AboutPage, ProcessPage, SiteSettings, LineSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

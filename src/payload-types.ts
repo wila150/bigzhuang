@@ -74,6 +74,7 @@ export interface Config {
     faqs: Faq;
     media: Media;
     inquiries: Inquiry;
+    'line-replies': LineReply;
     users: User;
     clients: Client;
     'payload-kv': PayloadKv;
@@ -89,6 +90,7 @@ export interface Config {
     faqs: FaqsSelect<false> | FaqsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     inquiries: InquiriesSelect<false> | InquiriesSelect<true>;
+    'line-replies': LineRepliesSelect<false> | LineRepliesSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     clients: ClientsSelect<false> | ClientsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -105,12 +107,14 @@ export interface Config {
     'about-page': AboutPage;
     'process-page': ProcessPage;
     'site-settings': SiteSetting;
+    'line-settings': LineSetting;
   };
   globalsSelect: {
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'about-page': AboutPageSelect<false> | AboutPageSelect<true>;
     'process-page': ProcessPageSelect<false> | ProcessPageSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    'line-settings': LineSettingsSelect<false> | LineSettingsSelect<true>;
   };
   locale: null;
   widgets: {
@@ -370,6 +374,36 @@ export interface Inquiry {
   createdAt: string;
 }
 /**
+ * 客人傳來的訊息包含任一關鍵字時自動回覆；沒對到的訊息不回，留給你手動聊天。
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "line-replies".
+ */
+export interface LineReply {
+  id: number;
+  /**
+   * 只給你自己看，例如「報價」
+   */
+  title: string;
+  /**
+   * 用逗號分隔，例如：報價,價格,多少錢
+   */
+  keywords: string;
+  reply: string;
+  buttonLabel?: string | null;
+  /**
+   * 可填網站路徑，例如 /contact
+   */
+  buttonUrl?: string | null;
+  enabled?: boolean | null;
+  /**
+   * 數字小的排前面
+   */
+  order?: number | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -479,6 +513,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'inquiries';
         value: number | Inquiry;
+      } | null)
+    | ({
+        relationTo: 'line-replies';
+        value: number | LineReply;
       } | null)
     | ({
         relationTo: 'users';
@@ -722,6 +760,21 @@ export interface InquiriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "line-replies_select".
+ */
+export interface LineRepliesSelect<T extends boolean = true> {
+  title?: T;
+  keywords?: T;
+  reply?: T;
+  buttonLabel?: T;
+  buttonUrl?: T;
+  enabled?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -907,6 +960,29 @@ export interface SiteSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "line-settings".
+ */
+export interface LineSetting {
+  id: number;
+  /**
+   * 留空就不送
+   */
+  welcomeMessage?: string | null;
+  /**
+   * 用你自己的 LINE 傳下方的綁定指令給官方帳號，會自動填入
+   */
+  adminUserId?: string | null;
+  /**
+   * 用你的 LINE 把這整句傳給官方帳號
+   */
+  bindCommand?: string | null;
+  notifyInquiry?: boolean | null;
+  notifyPayment?: boolean | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "home-page_select".
  */
 export interface HomePageSelect<T extends boolean = true> {
@@ -988,6 +1064,20 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   paymentNote?: T;
   seoTitle?: T;
   seoDescription?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "line-settings_select".
+ */
+export interface LineSettingsSelect<T extends boolean = true> {
+  welcomeMessage?: T;
+  adminUserId?: T;
+  bindCommand?: T;
+  notifyInquiry?: T;
+  notifyPayment?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

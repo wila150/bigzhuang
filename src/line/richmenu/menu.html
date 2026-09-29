@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-Hant-TW"><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@500;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body { width: 2500px; height: 1686px; background: #0b2742; font-family: 'Noto Sans TC', sans-serif; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 1fr); gap: 14px; padding: 14px; height: 100%; }
+  .tile { background: #f6f2ea; border-radius: 36px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 34px; color: #0b2742; }
+  .tile.accent { background: #d9582b; color: #fff; }
+  .tile svg { width: 230px; height: 230px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .tile.accent svg { stroke: #fff; }
+  .label { font-size: 118px; font-weight: 900; letter-spacing: 6px; line-height: 1; }
+  .sub { font-size: 58px; font-weight: 500; opacity: .7; line-height: 1; }
+</style></head><body><div class="grid">
+  <div class="tile"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="14" height="11" rx="1.5"/><rect x="16" y="8" width="6" height="12" rx="1.5"/><path d="M6 19h6"/></svg><div class="label">服務項目</div><div class="sub">形象網站・客製系統</div></div>
+  <div class="tile"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg><div class="label">作品案例</div><div class="sub">看做過的網站</div></div>
+  <div class="tile"><svg viewBox="0 0 24 24"><path d="M12 15 9 12c1.5-4.5 4.5-8 10-9-1 5.5-4.5 8.5-9 10Z"/><path d="M9 12H5l2.5-3.5H11M12 15v4l3.5-2.5V13"/></svg><div class="label">合作流程</div><div class="sub">6 步驟上線</div></div>
+  <div class="tile accent"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5Z"/><path d="M8 9h8M8 12h5"/></svg><div class="label">線上詢價</div><div class="sub">一個工作天內回覆</div></div>
+  <div class="tile"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg><div class="label">客戶專區</div><div class="sub">查帳單・線上繳費</div></div>
+  <div class="tile"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14"/><circle cx="12" cy="17.3" r=".6" fill="currentColor"/></svg><div class="label">常見問題</div><div class="sub">製作時間・費用</div></div>
+</div></body></html>

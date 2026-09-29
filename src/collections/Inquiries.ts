@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { isAdmin } from '../access'
+import { notifyAdmin } from '../line/notify'
 
 export const Inquiries: CollectionConfig = {
   slug: 'inquiries',
@@ -13,6 +14,25 @@ export const Inquiries: CollectionConfig = {
     defaultColumns: ['name', 'service', 'status', 'createdAt'],
   },
   defaultSort: '-createdAt',
+  hooks: {
+    afterChange: [
+      async ({ doc, operation, req }) => {
+        if (operation !== 'create') return
+        const lines = [
+          '新的網站詢問',
+          `姓名：${doc.name}`,
+          doc.service && `服務：${doc.service}`,
+          doc.budget && `預算：${doc.budget}`,
+          doc.lineId && `LINE：${doc.lineId}`,
+          doc.phone && `電話：${doc.phone}`,
+          doc.email && `Email：${doc.email}`,
+          '',
+          doc.message,
+        ].filter((l) => l !== undefined && l !== null && l !== false)
+        await notifyAdmin(req.payload, 'inquiry', lines.join('\n'))
+      },
+    ],
+  },
   fields: [
     { name: 'name', label: '姓名', type: 'text', required: true },
     {

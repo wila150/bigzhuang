@@ -1,4 +1,5 @@
 import { getPayloadClient } from '@/lib/data'
+import { notifyAdmin } from '@/line/notify'
 import { ecpayEnabled, ecpayIsStage, readForm, verifyCheckMacValue } from '@/payments/ecpay'
 
 const reply = (body: string, status = 200) => new Response(body, { status, headers: { 'Content-Type': 'text/plain' } })
@@ -39,5 +40,6 @@ export async function POST(req: Request) {
     },
   })
   payload.logger.info(`ECPay: ${client.name} paid ${bill.month} (${data.MerchantTradeNo})`)
+  await notifyAdmin(payload, 'payment', `客戶刷卡付款\n${client.name}｜${bill.month}\nNT$ ${Number(data.TradeAmt).toLocaleString('zh-TW')}`)
   return reply('1|OK')
 }

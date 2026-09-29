@@ -40,3 +40,8 @@ services:
         sync: false
       - key: ECPAY_ENV
         value: production
+      # LINE Official Account (Messaging API): webhook replies, notifications, rich menu
+      - key: LINE_CHANNEL_ID
+        sync: false
+      - key: LINE_CHANNEL_SECRET
+        sync: false
