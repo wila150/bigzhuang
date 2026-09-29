@@ -17,11 +17,12 @@ const col = [0, 833, 1667, W]
 const row = [0, 843, H]
 const link = (p: string) => `${site}${p}?utm_source=line&utm_medium=richmenu`
 
-const cells: { label: string; path: string }[] = [
+// A cell either opens a page (path) or sends a message that triggers a LINE auto-reply (text).
+const cells: ({ label: string; path: string } | { label: string; text: string })[] = [
   { label: '服務項目', path: '/services' },
   { label: '作品案例', path: '/works' },
   { label: '合作流程', path: '/process' },
-  { label: '線上詢價', path: '/contact' },
+  { label: '線上詢價', text: '線上詢價' }, // answered by the 線上詢價 auto-reply
   { label: '客戶專區', path: '/account' },
   { label: '常見問題', path: '/faq' },
 ]
@@ -31,7 +32,7 @@ const areas = cells.map((c, i) => {
   const y = Math.floor(i / 3)
   return {
     bounds: { x: col[x], y: row[y], width: col[x + 1] - col[x], height: row[y + 1] - row[y] },
-    action: { type: 'uri', label: c.label, uri: link(c.path) },
+    action: 'text' in c ? { type: 'message', label: c.label, text: c.text } : { type: 'uri', label: c.label, uri: link(c.path) },
   }
 })
 

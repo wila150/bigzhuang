@@ -14,7 +14,8 @@ export default async function HomePage() {
   const heroImg = mediaUrl(home.heroImage, 'large')
 
   return (
-    <>
+    // On phones the works section is moved up under the hero via CSS order (see .home in styles.css).
+    <div className="home">
       <section className="hero">
         <div className="container hero-inner">
           <div className="hero-copy">
@@ -138,6 +139,6 @@ export default async function HomePage() {
       ) : null}
 
       <CtaBanner text={home.ctaText} title={home.ctaTitle} />
-    </>
+    </div>
   )
 }
