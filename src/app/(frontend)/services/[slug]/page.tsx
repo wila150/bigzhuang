@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
@@ -6,7 +7,7 @@ import { Breadcrumbs } from '@/components/Breadcrumbs'
 import { CtaBanner } from '@/components/CtaBanner'
 import { Icon, type IconName } from '@/components/Icon'
 import { ProjectGrid } from '@/components/ProjectGrid'
-import { getProjects, getService, getServices, mediaUrl, projectsForService } from '@/lib/data'
+import { getProjects, getService, getServices, media, mediaUrl, projectsForService } from '@/lib/data'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -29,6 +30,7 @@ export default async function ServicePage({ params }: Props) {
   if (!service) notFound()
 
   const related = projectsForService(service, projects)
+  const cover = mediaUrl(service.cover, 'large')
   const idx = services.findIndex((s) => s.id === service.id)
   const next = services.length > 1 ? services[(idx + 1) % services.length] : null
 
@@ -44,12 +46,27 @@ export default async function ServicePage({ params }: Props) {
       <section className="page-hero service-hero">
         <div className="container">
           <Breadcrumbs items={[{ href: '/services', label: '服務項目' }, { label: service.title }]} />
-          <p className="eyebrow">{service.title}</p>
-          <h1>{service.tagline || service.title}</h1>
-          <p className="page-lead">{service.summary}</p>
-          <Link className="btn btn-accent" href="/contact">
-            歡迎洽詢
-          </Link>
+          <div className={cover ? 'service-hero-grid' : undefined}>
+            <div>
+              <p className="eyebrow">{service.title}</p>
+              <h1>{service.tagline || service.title}</h1>
+              <p className="page-lead">{service.summary}</p>
+              <Link className="btn btn-accent" href="/contact">
+                歡迎洽詢
+              </Link>
+            </div>
+            {cover ? (
+              <div className="service-hero-visual">
+                <Image
+                  alt={media(service.cover)?.alt ?? service.title}
+                  fill
+                  priority
+                  sizes="(max-width: 900px) 100vw, 55vw"
+                  src={cover}
+                />
+              </div>
+            ) : null}
+          </div>
         </div>
       </section>
 

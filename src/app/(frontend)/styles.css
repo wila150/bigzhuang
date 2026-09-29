@@ -1001,7 +1001,7 @@ a:hover .text-link svg,
 }
 .service-row-media {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   border-radius: 24px;
   overflow: hidden;
   background: linear-gradient(135deg, var(--navy), var(--navy-700));
@@ -1852,4 +1852,31 @@ a:hover .text-link svg,
   .works-section .eyebrow {
     display: none;
   }
+}
+
+/* ===== Service page hero with key visual ===== */
+.service-hero-grid {
+  display: grid;
+  grid-template-columns: 5fr 6fr;
+  gap: 48px;
+  align-items: center;
+}
+.service-hero-visual {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+.service-hero-visual img {
+  object-fit: cover;
+}
+@media (max-width: 900px) {
+  .service-hero-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+.service-hero-grid h1 {
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
 }
