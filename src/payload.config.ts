@@ -33,6 +33,8 @@ const dirname = path.dirname(filename)
 
 // In production, uploads go to Supabase Storage (S3-compatible) because Render's disk is wiped on deploy.
 // Locally, leaving S3_BUCKET unset keeps files in ./media.
+// The S3 plugin adds a media._objectkey column, so always run `migrate:create` and `generate:types` with
+// S3_BUCKET set (any value) — otherwise the generated migration drops that column in production.
 const useS3 = Boolean(process.env.S3_BUCKET)
 
 export default buildConfig({
