@@ -11,21 +11,25 @@ export const Inquiries: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     group: '營運',
-    defaultColumns: ['name', 'service', 'status', 'createdAt'],
+    defaultColumns: ['name', 'kind', 'service', 'status', 'createdAt'],
   },
   defaultSort: '-createdAt',
   hooks: {
     afterChange: [
       async ({ doc, operation, req }) => {
         if (operation !== 'create') return
+        const source = (doc.source as string) || 'web'
         const lines = [
-          {
-            line: '新的 LINE 線上詢價（到 LINE 聊天室回覆）',
-            facebook: '新的 Facebook 私訊詢價（到粉絲專頁收件匣回覆）',
-            instagram: '新的 Instagram 私訊詢價（到 IG 收件匣回覆）',
-            web: '新的網站詢問',
-          }[(doc.source as string) || 'web'] ?? '新的網站詢問',
+          doc.kind === 'repair'
+            ? `🔧 新的網站報修（${{ line: 'LINE', facebook: 'Facebook', instagram: 'Instagram', web: '網站' }[source] ?? '網站'}，到聊天室回覆）`
+            : ({
+                line: '新的 LINE 線上詢價（到 LINE 聊天室回覆）',
+                facebook: '新的 Facebook 私訊詢價（到粉絲專頁收件匣回覆）',
+                instagram: '新的 Instagram 私訊詢價（到 IG 收件匣回覆）',
+                web: '新的網站詢問',
+              }[source] ?? '新的網站詢問'),
           `姓名：${doc.name}`,
+          doc.website && `網站：${doc.website}`,
           doc.service && `服務：${doc.service}`,
           doc.budget && `預算：${doc.budget}`,
           doc.lineId && `LINE：${doc.lineId}`,
@@ -40,6 +44,17 @@ export const Inquiries: CollectionConfig = {
     ],
   },
   fields: [
+    {
+      name: 'kind',
+      label: '類型',
+      type: 'select',
+      defaultValue: 'inquiry',
+      options: [
+        { label: '詢價', value: 'inquiry' },
+        { label: '網站報修', value: 'repair' },
+      ],
+      admin: { position: 'sidebar' },
+    },
     { name: 'name', label: '姓名', type: 'text', required: true },
     {
       type: 'row',
@@ -68,6 +83,7 @@ export const Inquiries: CollectionConfig = {
         { name: 'lineUserId', label: '聊天平台使用者 ID', type: 'text', admin: { width: '50%', readOnly: true } },
       ],
     },
+    { name: 'website', label: '網站網址', type: 'text', admin: { condition: (data) => Boolean(data?.website) || data?.kind === 'repair' } },
     { name: 'service', label: '想做的服務', type: 'text' },
     { name: 'budget', label: '預算', type: 'text' },
     { name: 'message', label: '需求說明', type: 'textarea', required: true },

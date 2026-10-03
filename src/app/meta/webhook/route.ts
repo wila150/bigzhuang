@@ -1,6 +1,6 @@
 import { respond, welcome, type Platform } from '@/chat/engine'
 import { getPayloadClient } from '@/lib/data'
-import { metaDisplayName, metaEnabled, metaVerifyToken, sendMeta, toMeta, verifyMetaSignature } from '@/meta/client'
+import { metaDisplayName, metaEnabled, metaTyping, metaVerifyToken, sendMeta, toMeta, verifyMetaSignature } from '@/meta/client'
 
 // Webhook verification handshake from the Meta developer dashboard.
 export async function GET(req: Request) {
@@ -52,6 +52,7 @@ export async function POST(req: Request) {
             text: shown,
             isText,
             displayName: () => metaDisplayName(userId, platform),
+            typing: () => metaTyping(userId),
           })
         }
         if (replies?.length) await sendMeta(userId, toMeta(replies, platform))

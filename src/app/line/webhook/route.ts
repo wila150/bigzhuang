@@ -1,7 +1,7 @@
 import { getPayloadClient } from '@/lib/data'
 import { lineBindCode } from '@/line/bind-code'
 import { respond, welcome } from '@/chat/engine'
-import { lineApi, lineEnabled, reply, verifySignature, type LineMessage } from '@/line/client'
+import { lineApi, lineEnabled, reply, showLoading, verifySignature, type LineMessage } from '@/line/client'
 import { toLine } from '@/line/render'
 
 
@@ -53,7 +53,14 @@ async function handle(event: LineEvent, payload: Awaited<ReturnType<typeof getPa
     return [{ type: 'text', text: '綁定完成！之後有新詢問或客戶付款，都會通知這個 LINE。' }]
   }
 
-  const replies = await respond(payload, { platform: 'line', userId, text, isText, displayName: () => lineDisplayName(userId) })
+  const replies = await respond(payload, {
+    platform: 'line',
+    userId,
+    text,
+    isText,
+    displayName: () => lineDisplayName(userId),
+    typing: () => showLoading(userId),
+  })
   return replies ? toLine(replies) : null // null: leave it for a human in LINE chat.
 }
 

@@ -61,6 +61,22 @@ export const LineSettings: GlobalConfig = {
     { name: 'inquiryIntro', label: '線上詢價：開場白', type: 'textarea' },
     { name: 'inquiryDone', label: '線上詢價：完成訊息', type: 'textarea' },
     {
+      name: 'repairSteps',
+      label: '網站報修：引導問題',
+      type: 'array',
+      admin: {
+        description:
+          '客人傳「報修」，或訊息裡有「網站壞了」「打不開」「進不去」等字時，依序一題一題問。留空就用內建的 5 題。第 1 題的回答要有網址：如果是監控中的網站，會自動附上目前狀態。客人傳的截圖不算回答，會留在聊天室給你看。',
+        initCollapsed: true,
+      },
+      fields: [
+        { name: 'question', label: '問題', type: 'textarea', required: true },
+        { name: 'options', label: '快速選項（選填）', type: 'text', admin: { description: '用逗號分隔，例如：沒有動過,不確定' } },
+      ],
+    },
+    { name: 'repairIntro', label: '網站報修：開場白', type: 'textarea', admin: { description: '留空就用內建的' } },
+    { name: 'repairDone', label: '網站報修：完成訊息', type: 'textarea', admin: { description: '留空就用內建的' } },
+    {
       type: 'row',
       fields: [
         { name: 'notifyInquiry', label: '有新詢問單時通知我', type: 'checkbox', defaultValue: true, admin: { width: '50%' } },

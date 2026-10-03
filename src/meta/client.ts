@@ -67,6 +67,15 @@ export async function sendMeta(recipientId: string, messages: MetaMessage[]) {
   }
 }
 
+/** The "typing…" bubble in Messenger / Instagram; it clears when our next message arrives. Never throws. */
+export async function metaTyping(recipientId: string) {
+  try {
+    await graph('/me/messages', { method: 'POST', body: JSON.stringify({ recipient: { id: recipientId }, sender_action: 'typing_on' }) })
+  } catch {
+    // Cosmetic only.
+  }
+}
+
 export async function metaDisplayName(userId: string, platform: Platform) {
   const fallback = platform === 'instagram' ? 'Instagram 使用者' : 'Facebook 使用者'
   try {

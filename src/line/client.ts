@@ -41,6 +41,15 @@ export const reply = (replyToken: string, messages: LineMessage[]) =>
 export const push = (to: string, messages: LineMessage[]) =>
   lineApi('/v2/bot/message/push', { method: 'POST', body: JSON.stringify({ to, messages: messages.slice(0, 5) }) })
 
+/** The "…" loading animation in a one-on-one chat; it disappears when our next message arrives. Never throws. */
+export async function showLoading(chatId: string, seconds = 20) {
+  try {
+    await lineApi('/v2/bot/chat/loading/start', { method: 'POST', body: JSON.stringify({ chatId, loadingSeconds: seconds }) })
+  } catch {
+    // Cosmetic only.
+  }
+}
+
 export function verifySignature(rawBody: string, signature: string | null) {
   if (!signature || !channelSecret) return false
   const expected = crypto.createHmac('sha256', channelSecret).update(rawBody).digest('base64')

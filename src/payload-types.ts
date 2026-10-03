@@ -253,7 +253,6 @@ export interface Media {
    * 描述圖片內容，給螢幕閱讀器與 Google 看
    */
   alt: string;
-  _objectKey?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -380,12 +379,14 @@ export interface Faq {
  */
 export interface Inquiry {
   id: number;
+  kind?: ('inquiry' | 'repair') | null;
   name: string;
   email?: string | null;
   phone?: string | null;
   lineId?: string | null;
   source?: ('web' | 'line' | 'facebook' | 'instagram') | null;
   lineUserId?: string | null;
+  website?: string | null;
   service?: string | null;
   budget?: string | null;
   message: string;
@@ -442,6 +443,7 @@ export interface LineSession {
   id: number;
   userId: string;
   displayName?: string | null;
+  flow?: ('inquiry' | 'repair') | null;
   step: number;
   answers?:
     | {
@@ -452,6 +454,7 @@ export interface LineSession {
     | number
     | boolean
     | null;
+  images?: number | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -886,7 +889,6 @@ export interface FaqsSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
-  _objectKey?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -938,12 +940,14 @@ export interface MediaSelect<T extends boolean = true> {
  * via the `definition` "inquiries_select".
  */
 export interface InquiriesSelect<T extends boolean = true> {
+  kind?: T;
   name?: T;
   email?: T;
   phone?: T;
   lineId?: T;
   source?: T;
   lineUserId?: T;
+  website?: T;
   service?: T;
   budget?: T;
   message?: T;
@@ -981,8 +985,10 @@ export interface LineRepliesSelect<T extends boolean = true> {
 export interface LineSessionsSelect<T extends boolean = true> {
   userId?: T;
   displayName?: T;
+  flow?: T;
   step?: T;
   answers?: T;
+  images?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1316,6 +1322,27 @@ export interface LineSetting {
     | null;
   inquiryIntro?: string | null;
   inquiryDone?: string | null;
+  /**
+   * 客人傳「報修」，或訊息裡有「網站壞了」「打不開」「進不去」等字時，依序一題一題問。留空就用內建的 5 題。第 1 題的回答要有網址：如果是監控中的網站，會自動附上目前狀態。客人傳的截圖不算回答，會留在聊天室給你看。
+   */
+  repairSteps?:
+    | {
+        question: string;
+        /**
+         * 用逗號分隔，例如：沒有動過,不確定
+         */
+        options?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * 留空就用內建的
+   */
+  repairIntro?: string | null;
+  /**
+   * 留空就用內建的
+   */
+  repairDone?: string | null;
   notifyInquiry?: boolean | null;
   notifyPayment?: boolean | null;
   notifyMonitor?: boolean | null;
@@ -1490,6 +1517,15 @@ export interface LineSettingsSelect<T extends boolean = true> {
       };
   inquiryIntro?: T;
   inquiryDone?: T;
+  repairSteps?:
+    | T
+    | {
+        question?: T;
+        options?: T;
+        id?: T;
+      };
+  repairIntro?: T;
+  repairDone?: T;
   notifyInquiry?: T;
   notifyPayment?: T;
   notifyMonitor?: T;

@@ -10,6 +10,7 @@ import * as migration_20260929_091720_localization from './20260929_091720_local
 import * as migration_20260929_111845_meta_sources from './20260929_111845_meta_sources';
 import * as migration_20261003_050510_site_monitor from './20261003_050510_site_monitor';
 import * as migration_20261003_060000_restore_media_object_key from './20261003_060000_restore_media_object_key';
+import * as migration_20261003_061253_repair_flow from './20261003_061253_repair_flow';
 
 export const migrations = [
   {
@@ -65,11 +66,16 @@ export const migrations = [
   {
     up: migration_20261003_050510_site_monitor.up,
     down: migration_20261003_050510_site_monitor.down,
-    name: '20261003_050510_site_monitor'
+    name: '20261003_050510_site_monitor',
   },
   {
     up: migration_20261003_060000_restore_media_object_key.up,
     down: migration_20261003_060000_restore_media_object_key.down,
     name: '20261003_060000_restore_media_object_key',
+  },
+  {
+    up: migration_20261003_061253_repair_flow.up,
+    down: migration_20261003_061253_repair_flow.down,
+    name: '20261003_061253_repair_flow'
   },
 ];
