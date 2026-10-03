@@ -67,5 +67,11 @@ export const LineSettings: GlobalConfig = {
         { name: 'notifyPayment', label: '客戶刷卡付款時通知我', type: 'checkbox', defaultValue: true, admin: { width: '50%' } },
       ],
     },
+    {
+      name: 'notifyMonitor',
+      label: '監控的網站斷線或恢復時通知我',
+      type: 'checkbox',
+      defaultValue: true,
+    },
   ],
 }

@@ -18,6 +18,7 @@ import { LineSessions } from './collections/LineSessions'
 import { Media } from './collections/Media'
 import { Projects } from './collections/Projects'
 import { Services } from './collections/Services'
+import { Sites } from './collections/Sites'
 import { Users } from './collections/Users'
 import { AboutPage } from './globals/AboutPage'
 import { ContactPage } from './globals/ContactPage'
@@ -25,6 +26,7 @@ import { HomePage } from './globals/HomePage'
 import { LineSettings } from './globals/LineSettings'
 import { ProcessPage } from './globals/ProcessPage'
 import { SiteSettings } from './globals/SiteSettings'
+import { checkAllSites } from './monitor/check'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -42,6 +44,7 @@ export default buildConfig({
     },
     components: {
       afterLogin: ['@/components/admin/GoogleLoginButton'],
+      beforeDashboard: ['@/components/admin/SiteStatus'],
     },
     // Side-by-side preview while editing, switchable between phone and desktop.
     livePreview: {
@@ -88,8 +91,32 @@ export default buildConfig({
     supportedLanguages: { 'zh-TW': zhTw, en },
     fallbackLanguage: 'zh-TW',
   },
-  collections: [Services, Projects, Categories, Faqs, Media, Inquiries, Clients, LineReplies, LineSessions, Users],
+  collections: [Services, Projects, Categories, Faqs, Media, Inquiries, Clients, LineReplies, LineSessions, Sites, Users],
   globals: [HomePage, AboutPage, ProcessPage, ContactPage, SiteSettings, LineSettings],
+  // Site monitor: every 10 minutes, ping the sites in 監控網站 (see src/monitor/check.ts).
+  // Runs inside the always-on web server, so no external cron is needed.
+  jobs: {
+    // Customer-portal clients are logged in too — only staff may queue or run jobs over the REST API.
+    access: {
+      queue: ({ req }) => req.user?.collection === 'users',
+      run: ({ req }) => req.user?.collection === 'users',
+      cancel: ({ req }) => req.user?.collection === 'users',
+    },
+    tasks: [
+      {
+        slug: 'checkSites',
+        label: '檢查監控網站',
+        schedule: [{ cron: '0 */10 * * * *', queue: 'monitor' }],
+        handler: async ({ req }) => {
+          await checkAllSites(req.payload)
+          return { output: {} }
+        },
+      },
+    ],
+    // Only the deployed server runs the monitor, so `npm run dev` doesn't ping sites or send LINE alerts.
+    autoRun: process.env.NODE_ENV === 'production' ? [{ cron: '* * * * *', queue: 'monitor' }] : [],
+    deleteJobOnComplete: true,
+  },
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {

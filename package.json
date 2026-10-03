@@ -21,6 +21,7 @@
     "seed:line": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/line.ts",
     "seed:contact": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/contact.ts",
     "seed:english": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/i18n-english.ts",
+    "seed:sites": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/sites.ts",
     "meta:setup": "tsx --env-file=.env.production.local src/meta/setup.ts"
   },
   "dependencies": {
