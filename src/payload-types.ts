@@ -487,6 +487,8 @@ export interface Site {
   createdAt: string;
 }
 /**
+ * 新增的人可以用同一個 Gmail 按「使用 Google 帳號登入」進後台（密碼隨便設，用 Google 登入時用不到）。要取消權限就刪掉帳號。網站擁有者的帳號不能刪除。
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */

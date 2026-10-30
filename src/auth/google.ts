@@ -1,7 +1,5 @@
 import { OAuth2Plugin } from 'payload-oauth2'
 
-import { isAdminEmail } from './admins'
-
 const serverURL = process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000'
 
 export const googleLoginEnabled = Boolean(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET)
@@ -59,11 +57,10 @@ function googleFor(opts: {
   })
 }
 
-// Admin: /api/users/oauth/google — only allowlisted emails (src/auth/admins.ts).
+// Admin: /api/users/oauth/google — only emails that already have an account in 系統 → 管理員.
 export const googleOAuthAdmin = googleFor({
   collection: 'users',
   strategyName: 'google',
-  allow: isAdminEmail,
   successPath: '/admin',
   failurePath: '/admin/login?google=failed',
 })
