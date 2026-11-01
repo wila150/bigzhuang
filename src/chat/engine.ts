@@ -33,7 +33,7 @@ export const defaultSteps: Step[] = [
   { question: '想做的網站類型是什麼呢？', options: '形象網站,購物網站,預約／報名系統,其他系統,還不確定', saveTo: 'service' },
   { question: '需要哪些頁面或功能呢？\n例如：作品集、線上預約、會員登入、線上付款', options: '還不確定', saveTo: 'message' },
   { question: '有沒有喜歡的參考網站？\n可以直接貼網址或傳截圖', options: '沒有', saveTo: 'message' },
-  { question: '預算大概多少呢？', options: '3 萬以下,3～6 萬,6～10 萬,10 萬以上,還不確定', saveTo: 'budget' },
+  { question: '預算大概多少呢？', options: '1 萬以下,1～3 萬,3～6 萬,6 萬以上,還不確定', saveTo: 'budget' },
   { question: '希望什麼時候上線呢？', options: '1 個月內,1～3 個月,3 個月以上,還不確定', saveTo: 'message' },
 ]
 export const defaultRepairSteps: Step[] = [
