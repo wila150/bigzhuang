@@ -26,6 +26,7 @@ import { HomePage } from './globals/HomePage'
 import { LineSettings } from './globals/LineSettings'
 import { ProcessPage } from './globals/ProcessPage'
 import { SiteSettings } from './globals/SiteSettings'
+import { runBillReminders } from './billing/reminders'
 import { checkAllSites } from './monitor/check'
 
 const filename = fileURLToPath(import.meta.url)
@@ -112,6 +113,17 @@ export default buildConfig({
         handler: async ({ req }) => {
           await checkAllSites(req.payload)
           return { output: {} }
+        },
+      },
+      // Monthly-fee bills: every day at 10:00 Taiwan time (02:00 UTC), LINE reminders 7 days before the due date
+      // and an overdue notice to the admin (see src/billing/reminders.ts).
+      {
+        slug: 'billReminders',
+        label: '月費帳單到期提醒',
+        schedule: [{ cron: '0 0 2 * * *', queue: 'monitor' }],
+        handler: async ({ req }) => {
+          const output = await runBillReminders(req.payload)
+          return { output }
         },
       },
     ],

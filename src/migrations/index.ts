@@ -11,6 +11,7 @@ import * as migration_20260929_111845_meta_sources from './20260929_111845_meta_
 import * as migration_20261003_050510_site_monitor from './20261003_050510_site_monitor';
 import * as migration_20261003_060000_restore_media_object_key from './20261003_060000_restore_media_object_key';
 import * as migration_20261003_061253_repair_flow from './20261003_061253_repair_flow';
+import * as migration_20261101_074430_bill_reminders from './20261101_074430_bill_reminders';
 
 export const migrations = [
   {
@@ -76,6 +77,11 @@ export const migrations = [
   {
     up: migration_20261003_061253_repair_flow.up,
     down: migration_20261003_061253_repair_flow.down,
-    name: '20261003_061253_repair_flow'
+    name: '20261003_061253_repair_flow',
+  },
+  {
+    up: migration_20261101_074430_bill_reminders.up,
+    down: migration_20261101_074430_bill_reminders.down,
+    name: '20261101_074430_bill_reminders'
   },
 ];

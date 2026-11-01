@@ -1,6 +1,7 @@
 import type { Access, CollectionConfig } from 'payload'
 
 import { isAdmin, isAdminField } from '../access'
+import { clientBindCommand } from '../line/bind-code'
 
 // Admins see every client; a logged-in client sees only their own record.
 const adminOrSelf: Access = ({ req }) => {
@@ -32,6 +33,26 @@ export const Clients: CollectionConfig = {
       admin: { description: '客戶用這個 Google 帳號登入「客戶專區」查看與支付帳單' },
     },
     { name: 'contact', label: '聯絡人與方式', type: 'text', access: { read: isAdminField } },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'lineUserId',
+          label: 'LINE（帳單提醒）',
+          type: 'text',
+          // Only isAdmin may update (collection access); the client can see whether their own LINE is linked.
+          admin: { width: '50%', description: '客戶在 LINE 傳右邊的綁定指令後自動填入；清空就不再用 LINE 提醒' },
+        },
+        {
+          name: 'lineBindCommand',
+          label: '綁定指令',
+          type: 'text',
+          virtual: true,
+          admin: { width: '50%', readOnly: true, description: '客戶專區也看得到。客戶用 LINE 把這整句傳給官方帳號' },
+          hooks: { afterRead: [({ data }) => (data?.id ? clientBindCommand(data.id) : '')] },
+        },
+      ],
+    },
     { name: 'site', label: '網站', type: 'text' },
     {
       type: 'row',
@@ -87,6 +108,23 @@ export const Clients: CollectionConfig = {
               type: 'text',
               index: true,
               admin: { width: '33%', readOnly: true, description: '刷卡時自動產生' },
+            },
+          ],
+        },
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'remindedAt',
+              label: '已傳到期提醒',
+              type: 'date',
+              admin: { width: '50%', readOnly: true, date: { pickerAppearance: 'dayAndTime' }, description: '到期前 7 天自動用 LINE 提醒客戶（只傳一次）' },
+            },
+            {
+              name: 'overdueNotifiedAt',
+              label: '已通知逾期',
+              type: 'date',
+              admin: { width: '50%', readOnly: true, date: { pickerAppearance: 'dayAndTime' }, description: '過了繳費期限自動改成逾期並通知你（只通知一次）' },
             },
           ],
         },

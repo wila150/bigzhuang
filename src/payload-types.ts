@@ -134,6 +134,7 @@ export interface Config {
   jobs: {
     tasks: {
       checkSites: TaskCheckSites;
+      billReminders: TaskBillReminders;
       inline: {
         input: unknown;
         output: unknown;
@@ -527,6 +528,14 @@ export interface Client {
    */
   email: string;
   contact?: string | null;
+  /**
+   * 客戶在 LINE 傳右邊的綁定指令後自動填入；清空就不再用 LINE 提醒
+   */
+  lineUserId?: string | null;
+  /**
+   * 客戶專區也看得到。客戶用 LINE 把這整句傳給官方帳號
+   */
+  lineBindCommand?: string | null;
   site?: string | null;
   monthlyFee?: number | null;
   billingDay?: number | null;
@@ -542,6 +551,14 @@ export interface Client {
          * 刷卡時自動產生
          */
         tradeNo?: string | null;
+        /**
+         * 到期前 7 天自動用 LINE 提醒客戶（只傳一次）
+         */
+        remindedAt?: string | null;
+        /**
+         * 過了繳費期限自動改成逾期並通知你（只通知一次）
+         */
+        overdueNotifiedAt?: string | null;
         id?: string | null;
       }[]
     | null;
@@ -620,7 +637,7 @@ export interface PayloadJob {
     | {
         executedAt: string;
         completedAt: string;
-        taskSlug: 'inline' | 'checkSites';
+        taskSlug: 'inline' | 'checkSites' | 'billReminders';
         taskID: string;
         input?:
           | {
@@ -653,7 +670,7 @@ export interface PayloadJob {
         id?: string | null;
       }[]
     | null;
-  taskSlug?: ('inline' | 'checkSites') | null;
+  taskSlug?: ('inline' | 'checkSites' | 'billReminders') | null;
   queue?: string | null;
   waitUntil?: string | null;
   processing?: boolean | null;
@@ -1045,6 +1062,8 @@ export interface ClientsSelect<T extends boolean = true> {
   name?: T;
   email?: T;
   contact?: T;
+  lineUserId?: T;
+  lineBindCommand?: T;
   site?: T;
   monthlyFee?: T;
   billingDay?: T;
@@ -1058,6 +1077,8 @@ export interface ClientsSelect<T extends boolean = true> {
         paymentMethod?: T;
         paidAt?: T;
         tradeNo?: T;
+        remindedAt?: T;
+        overdueNotifiedAt?: T;
         id?: T;
       };
   note?: T;
@@ -1560,6 +1581,14 @@ export interface CollectionsWidget {
  * via the `definition` "TaskCheckSites".
  */
 export interface TaskCheckSites {
+  input?: unknown;
+  output?: unknown;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskBillReminders".
+ */
+export interface TaskBillReminders {
   input?: unknown;
   output?: unknown;
 }

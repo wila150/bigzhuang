@@ -1,5 +1,5 @@
 import { getPayloadClient } from '@/lib/data'
-import { lineBindCode } from '@/line/bind-code'
+import { clientBindCode, lineBindCode } from '@/line/bind-code'
 import { respond, welcome } from '@/chat/engine'
 import { lineApi, lineEnabled, reply, showLoading, verifySignature, type LineMessage } from '@/line/client'
 import { toLine } from '@/line/render'
@@ -51,6 +51,17 @@ async function handle(event: LineEvent, payload: Awaited<ReturnType<typeof getPa
   if (isText && text === `綁定通知 ${lineBindCode()}`) {
     await payload.updateGlobal({ slug: 'line-settings', overrideAccess: true, data: { adminUserId: userId } })
     return [{ type: 'text', text: '綁定完成！之後有新詢問或客戶付款，都會通知這個 LINE。' }]
+  }
+
+  // A client links their LINE to bill reminders with the command shown in 客戶專區.
+  const bill = isText ? text.match(/^綁定帳單\s*([0-9A-Fa-f]{6})$/) : null
+  if (bill) {
+    const code = bill[1].toUpperCase()
+    const { docs } = await payload.find({ collection: 'clients', limit: 500, depth: 0, overrideAccess: true, pagination: false })
+    const client = docs.find((c) => clientBindCode(c.id) === code)
+    if (!client) return [{ type: 'text', text: '綁定碼不正確，請到客戶專區複製完整的綁定指令再傳一次。' }]
+    await payload.update({ collection: 'clients', id: client.id, data: { lineUserId: userId }, overrideAccess: true })
+    return [{ type: 'text', text: `綁定完成！${client.name} 的月費帳單到期前 7 天，會用這個 LINE 提醒您。` }]
   }
 
   const replies = await respond(payload, {

@@ -8,6 +8,8 @@ import { googleLoginEnabled } from '@/auth/google'
 import { getDictionary } from '@/i18n/dictionaries'
 import { pageLang, type LangParams } from '@/i18n/page'
 import { ecpayEnabled, ecpayIsStage } from '@/payments/ecpay'
+import { clientBindCommand } from '@/line/bind-code'
+import { lineEnabled } from '@/line/client'
 
 export async function generateMetadata({ params }: LangParams): Promise<Metadata> {
   return { title: getDictionary(await pageLang(params)).account.title, robots: { index: false } }
@@ -91,6 +93,25 @@ export default async function AccountPage({ params: routeParams, searchParams }:
               <strong className={due.length ? 'is-due' : undefined}>{due.length ? t.dueCount(due.length) : t.none}</strong>
             </div>
           </div>
+
+          {lineEnabled ? (
+            <div className="account-line">
+              <h2>{t.lineTitle}</h2>
+              {client.lineUserId ? (
+                <p>{t.lineBound}</p>
+              ) : (
+                <>
+                  <p>{t.lineHow}</p>
+                  <p className="account-line-cmd mono">{clientBindCommand(client.id)}</p>
+                  {settings.lineUrl ? (
+                    <a className="btn btn-primary btn-sm" href={settings.lineUrl} rel="noopener noreferrer" target="_blank">
+                      {t.lineAdd}
+                    </a>
+                  ) : null}
+                </>
+              )}
+            </div>
+          ) : null}
 
           <h2>{t.bills}</h2>
           {bills.length ? (
